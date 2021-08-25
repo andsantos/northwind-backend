@@ -1,0 +1,37 @@
+error:
+  whitelabel:
+    enabled: false
+
+server:
+  port: 8080
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: static/**
+    livereload:
+      enabled: false
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://127.0.0.1:3306/northwind
+    username: root
+    password: 123456
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  jpa:
+# descomentar para criar a tabela
+#    generate-ddl: true
+#    hibernate:
+#      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+logging:
+  level:
+    ROOT: INFO
+    org.hibernate.SQL: DEBUG
+    br.com.formiga.northwind: DEBUG

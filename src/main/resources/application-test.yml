@@ -14,17 +14,19 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://127.0.0.1:3306/northwind
-    username: root
-    password: 123456
+    url: jdbc:h2:file:./target/h2db/db/northwind;DB_CLOSE_DELAY=-1
+    username: northwind
+    password:
     hikari:
       poolName: Hikari
       auto-commit: false
+  h2:
+    console:
+      # disable spring boot built-in h2-console since we start it manually with correct configuration
+      enabled: false
   jpa:
-# descomentar para criar a tabela
-#    generate-ddl: true
-#    hibernate:
-#      ddl-auto: create
+    hibernate:
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
