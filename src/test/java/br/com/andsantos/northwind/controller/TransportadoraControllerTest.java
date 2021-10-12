@@ -21,49 +21,46 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.andsantos.core.controller.IntegrationTest;
-import br.com.andsantos.northwind.domain.Categoria;
-import br.com.andsantos.northwind.repository.CategoriaRepository;
-import br.com.andsantos.northwind.service.dto.CategoriaDTO;
-import br.com.andsantos.northwind.service.mapper.CategoriaMapper;
+import br.com.andsantos.northwind.domain.Transportadora;
+import br.com.andsantos.northwind.repository.TransportadoraRepository;
+import br.com.andsantos.northwind.service.dto.TransportadoraDTO;
+import br.com.andsantos.northwind.service.mapper.TransportadoraMapper;
 import br.com.andsantos.northwind.util.TestUtil;
 
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class CategoriaControllerTest {
-    private static final String ENTITY_API_URL = "/api/categorias";
+public class TransportadoraControllerTest {
+    private static final String ENTITY_API_URL = "/api/transportadoras";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static final String PADRAO_NOME_CATEGORIA = "AAAAAAAAAAAAA";
-    private static final String PADRAO_DESCRICAO = "AAAAAAAAAAAAAAAAAA";
-    private static final String PADRAO_IMAGEM = "AAAAAAAAAAAA";
+    private static final String NOME_TRANSPORTADORA = "AAAAAAAAAAAAAAA";
+    private static final String TELEFONE = "(AA) AAAA-7777";
 
-    private static final String NOME_CATEGORIA_ALTERADO = "BBBBBBBBBBBBBBBBB";
-    private static final String DESCRICAO_ALTERADO = "BBBBBBBBBBBBBBBB";
-    private static final String IMAGEM_ALTERADO = "BBBBBBBBBBBB";
+    private static final String NOME_TRANSPORTADORA_ALTERADO = "BBBBBBBBBBBBBBB";
+    private static final String TELEFONE_ALTERADO = "(AA) BBBB-7777";
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private CategoriaRepository repository;
+    private TransportadoraRepository repository;
 
     @Autowired
-    private CategoriaMapper mapper;
+    private TransportadoraMapper mapper;
 
-    public Categoria criarCategoria() {
-        var dto = new Categoria();
-        dto.setNomeCategoria(PADRAO_NOME_CATEGORIA);
-        dto.setDescricao(PADRAO_DESCRICAO);
-        dto.setImagem(PADRAO_IMAGEM);
+    public Transportadora criarTransportadora() {
+        var dto = new Transportadora();
+        dto.setNomeTransportadora(NOME_TRANSPORTADORA);
+        dto.setTelefone(TELEFONE);
 
         return dto;
     }
 
     @Test
     @Transactional
-    void salvarCategoria() throws Exception {
-        CategoriaDTO dto = mapper.toDto(criarCategoria());
+    void salvarTransportadora() throws Exception {
+        TransportadoraDTO dto = mapper.toDto(criarTransportadora());
 
         mockMvc
             .perform(post(ENTITY_API_URL)
@@ -71,61 +68,57 @@ public class CategoriaControllerTest {
             .content(TestUtil.convertObjectToJsonBytes(dto)))
             .andExpect(status().isCreated());
 
-        List<Categoria> lista = repository.findAll();
-        Categoria test = lista.get(lista.size() - 1);
-        assertThat(test.getNomeCategoria()).isEqualTo(PADRAO_NOME_CATEGORIA);
-        assertThat(test.getDescricao()).isEqualTo(PADRAO_DESCRICAO);
-        assertThat(test.getImagem()).isEqualTo(PADRAO_IMAGEM);
+        List<Transportadora> lista = repository.findAll();
+        Transportadora test = lista.get(lista.size() - 1);
+        assertThat(test.getNomeTransportadora()).isEqualTo(NOME_TRANSPORTADORA);
+        assertThat(test.getTelefone()).isEqualTo(TELEFONE);
     }
 
     @Test
     @Transactional
-    void listarCategorias() throws Exception {
-        Categoria obj = repository.save(criarCategoria());
+    void listarTransportadoras() throws Exception {
+        Transportadora obj = repository.save(criarTransportadora());
 
         mockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeCategoria").value(hasItem(PADRAO_NOME_CATEGORIA)))
-            .andExpect(jsonPath("$.[*].descricao").value(hasItem(PADRAO_DESCRICAO)))
-            .andExpect(jsonPath("$.[*].imagem").value(hasItem(PADRAO_IMAGEM)));
+            .andExpect(jsonPath("$.[*].nomeTransportadora").value(hasItem(NOME_TRANSPORTADORA)))
+            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)));
     }
 
     @Test
     @Transactional
-    void listarCategoriasComFiltro() throws Exception {
-        Categoria obj = repository.save(criarCategoria());
+    void listarTransportadorasComFiltro() throws Exception {
+        Transportadora obj = repository.save(criarTransportadora());
 
         mockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc&nome=A"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeCategoria").value(hasItem(PADRAO_NOME_CATEGORIA)))
-            .andExpect(jsonPath("$.[*].descricao").value(hasItem(PADRAO_DESCRICAO)))
-            .andExpect(jsonPath("$.[*].imagem").value(hasItem(PADRAO_IMAGEM)));
+            .andExpect(jsonPath("$.[*].nomeTransportadora").value(hasItem(NOME_TRANSPORTADORA)))
+            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)));
     }
 
     @Test
     @Transactional
-    void obterCategoria() throws Exception {
-        Categoria obj = repository.save(criarCategoria());
+    void obterTransportadora() throws Exception {
+        Transportadora obj = repository.save(criarTransportadora());
 
         mockMvc
             .perform(get(ENTITY_API_URL_ID, obj.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(obj.getId().intValue()))
-            .andExpect(jsonPath("$.nomeCategoria").value(PADRAO_NOME_CATEGORIA))
-            .andExpect(jsonPath("$.descricao").value(PADRAO_DESCRICAO))
-            .andExpect(jsonPath("$.imagem").value(PADRAO_IMAGEM));
+            .andExpect(jsonPath("$.nomeTransportadora").value(NOME_TRANSPORTADORA))
+            .andExpect(jsonPath("$.telefone").value(TELEFONE));
     }
 
     @Test
     @Transactional
-    void testarCategoriaNaoExistente() throws Exception {
+    void testarTransportadoraNaoExistente() throws Exception {
         mockMvc
             .perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE))
             .andExpect(status().isNotFound());
@@ -133,8 +126,8 @@ public class CategoriaControllerTest {
 
     @Test
     @Transactional
-    void excluirCategoria() throws Exception {
-        Categoria obj = repository.save(criarCategoria());
+    void excluirTransportadora() throws Exception {
+        Transportadora obj = repository.save(criarTransportadora());
 
         int qtdeAntesExclusao = repository.findAll().size();
 
@@ -142,22 +135,21 @@ public class CategoriaControllerTest {
             .perform(delete(ENTITY_API_URL_ID, obj.getId()))
             .andExpect(status().isNoContent());
 
-        List<Categoria> lista = repository.findAll();
+        List<Transportadora> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao - 1);
     }
 
     @Test
     @Transactional
-    void atualizarCategoria() throws Exception {
-        Categoria obj = repository.save(criarCategoria());
+    void atualizarTransportadora() throws Exception {
+        Transportadora obj = repository.save(criarTransportadora());
 
         int qtdeAntesExclusao = repository.findAll().size();
 
-        CategoriaDTO dto = mapper.toDto(obj);
+        TransportadoraDTO dto = mapper.toDto(obj);
 
-        dto.setNomeCategoria(NOME_CATEGORIA_ALTERADO);
-        dto.setDescricao(DESCRICAO_ALTERADO);
-        dto.setImagem(IMAGEM_ALTERADO);
+        dto.setNomeTransportadora(NOME_TRANSPORTADORA_ALTERADO);
+        dto.setTelefone(TELEFONE_ALTERADO);
 
         mockMvc
             .perform(
@@ -167,24 +159,23 @@ public class CategoriaControllerTest {
             )
             .andExpect(status().isCreated());
 
-        List<Categoria> lista = repository.findAll();
+        List<Transportadora> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao);
 
-        Categoria test = repository.findById(obj.getId()).get();
+        Transportadora test = repository.findById(obj.getId()).get();
 
-        assertThat(test.getNomeCategoria()).isEqualTo(NOME_CATEGORIA_ALTERADO);
-        assertThat(test.getDescricao()).isEqualTo(DESCRICAO_ALTERADO);
-        assertThat(test.getImagem()).isEqualTo(IMAGEM_ALTERADO);
+        assertThat(test.getNomeTransportadora()).isEqualTo(NOME_TRANSPORTADORA_ALTERADO);
+        assertThat(test.getTelefone()).isEqualTo(TELEFONE_ALTERADO);
     }
 
     @Test
     @Transactional
-    void atualizarCategoriaNaoExistente() throws Exception {
+    void atualizarTransportadoraNaoExistente() throws Exception {
         int qtdeAntesExclusao = repository.findAll().size();
-        Categoria obj = criarCategoria();
+        Transportadora obj = criarTransportadora();
         obj.setId(Long.MAX_VALUE);
 
-        CategoriaDTO dto = mapper.toDto(obj);
+        TransportadoraDTO dto = mapper.toDto(obj);
 
         mockMvc
             .perform(
@@ -194,18 +185,18 @@ public class CategoriaControllerTest {
             )
             .andExpect(status().isNotFound());
 
-        List<Categoria> lista = repository.findAll();
+        List<Transportadora> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao);
     }
 
     @Test
     @Transactional
-    void atualizarCategoriaComParametroIdDiferente() throws Exception {
+    void atualizarTransportadoraComParametroIdDiferente() throws Exception {
         int qtdeAntesExclusao = repository.findAll().size();
-        Categoria obj = criarCategoria();
+        Transportadora obj = criarTransportadora();
         obj.setId(Long.MAX_VALUE);
 
-        CategoriaDTO dto = mapper.toDto(obj);
+        TransportadoraDTO dto = mapper.toDto(obj);
 
         mockMvc
             .perform(
@@ -215,23 +206,23 @@ public class CategoriaControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        List<Categoria> lista = repository.findAll();
+        List<Transportadora> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao);
     }
 
     @Test
     @Transactional
-    void atualizarCategoriaSemParametroId() throws Exception {
+    void atualizarTransportadoraSemParametroId() throws Exception {
         int qtdeAntesExclusao = repository.findAll().size();
-        Categoria obj = criarCategoria();
+        Transportadora obj = criarTransportadora();
 
-        CategoriaDTO dto = mapper.toDto(obj);
+        TransportadoraDTO dto = mapper.toDto(obj);
 
         mockMvc
             .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto)))
             .andExpect(status().isMethodNotAllowed());
 
-        List<Categoria> lista = repository.findAll();
+        List<Transportadora> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao);
     }
 }

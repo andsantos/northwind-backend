@@ -33,37 +33,38 @@ public class ClienteController {
 
 	private ClienteService service;
 
-	public ClienteController(ClienteService ClienteService) {
-		this.service = ClienteService;
+	public ClienteController(ClienteService clienteService) {
+		this.service = clienteService;
 	}
 
-    @GetMapping("/Clientes")
-    public ResponseEntity<List<ClienteDTO>> listar(Pageable pageable, @RequestParam(required = false) String nome) {
-        log.debug("Recuperando todas as Clientes");
+    @GetMapping("/clientes")
+    public ResponseEntity<List<ClienteDTO>> listar(Pageable pageable,
+            @RequestParam(required = false) String nome) {
+        log.debug("Recuperando todos os clientes");
         Page<ClienteDTO> page = service.listar(nome, pageable);
         return ResponseEntity.ok().body(page.getContent());
     }
 
-    @GetMapping("/Clientes/{id}")
+    @GetMapping("/clientes/{id}")
     public ResponseEntity<ClienteDTO> obter(@PathVariable Long id) {
-        log.debug("Recuperando a Cliente com id {}", id);
+        log.debug("Recuperando o cliente com id {}", id);
         ClienteDTO dto = service.obter(id);
         return ResponseEntity.ok().body(dto);
     }
 
-    @PostMapping("/Clientes")
+    @PostMapping("/clientes")
     public ResponseEntity<ClienteDTO> salvar(@Valid @RequestBody ClienteDTO dto)
     		throws URISyntaxException {
-        log.debug("Gravando Cliente {} ", dto);
+        log.debug("Gravando cliente {} ", dto);
         ClienteDTO result = service.salvar(dto);
         return ResponseEntity
-        		.created(new URI("/Clientes/" + result.getId()))
+        		.created(new URI("/clientes/" + result.getId()))
         		.body(result);
     }
 
-    @PutMapping("/Clientes/{id}")
+    @PutMapping("/clientes/{id}")
     public ResponseEntity<ClienteDTO> atualizar(
-    		@PathVariable(value = "id", required = false) final Long id, 
+    		@PathVariable(value = "id", required = false) final Long id,
     		@Valid @RequestBody ClienteDTO dto) 
     		throws URISyntaxException {
         log.debug("Atualizando Cliente {} ", dto);
@@ -78,13 +79,13 @@ public class ClienteController {
 
         ClienteDTO result = service.atualizar(dto);
         return ResponseEntity
-        		.created(new URI("/Clientes/" + result.getId()))
+        		.created(new URI("/clientes/" + result.getId()))
         		.body(result);
     }
 
-    @DeleteMapping("/Clientes/{id}")
+    @DeleteMapping("/clientes/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        log.debug("Recuperando a Cliente com id {}", id);
+        log.debug("Excluindo cliente com id {}", id);
         service.excluir(id);
         return ResponseEntity.noContent().build();
     }

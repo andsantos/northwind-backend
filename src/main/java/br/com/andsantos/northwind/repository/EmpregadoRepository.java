@@ -9,7 +9,7 @@ import br.com.andsantos.northwind.domain.Empregado;
 
 @Repository
 public interface EmpregadoRepository extends JpaRepository<Empregado, Long> {
-	Boolean existsByNomeEmpregado(String nomeEmpregado);
+	boolean existsByNomeEmpregado(String nomeEmpregado);
 
 	Page<Empregado> findAllByNomeEmpregadoContaining(String nomeEmpregado, Pageable pageable);
 }

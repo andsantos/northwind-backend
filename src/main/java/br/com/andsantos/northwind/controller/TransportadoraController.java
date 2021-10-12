@@ -33,12 +33,13 @@ public class TransportadoraController {
 
 	private TransportadoraService service;
 
-	public TransportadoraController(TransportadoraService TransportadoraService) {
-		this.service = TransportadoraService;
+	public TransportadoraController(TransportadoraService transportadoraService) {
+		this.service = transportadoraService;
 	}
 
     @GetMapping("/transportadoras")
-    public ResponseEntity<List<TransportadoraDTO>> listar(Pageable pageable, @RequestParam(required = false) String nome) {
+    public ResponseEntity<List<TransportadoraDTO>> listar(Pageable pageable,
+            @RequestParam(required = false) String nome) {
         log.debug("Recuperando todas as transportadoras");
         Page<TransportadoraDTO> page = service.listar(nome, pageable);
         return ResponseEntity.ok().body(page.getContent());
@@ -78,7 +79,7 @@ public class TransportadoraController {
 
         TransportadoraDTO result = service.atualizar(dto);
         return ResponseEntity
-        		.created(new URI("/Transportadoras/" + result.getId()))
+        		.created(new URI("/transportadoras/" + result.getId()))
         		.body(result);
     }
 

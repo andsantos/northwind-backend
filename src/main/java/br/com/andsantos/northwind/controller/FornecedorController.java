@@ -33,8 +33,8 @@ public class FornecedorController {
 
 	private FornecedorService service;
 
-	public FornecedorController(FornecedorService FornecedorService) {
-		this.service = FornecedorService;
+	public FornecedorController(FornecedorService fornecedorService) {
+		this.service = fornecedorService;
 	}
 
     @GetMapping("/fornecedores")
@@ -82,7 +82,7 @@ public class FornecedorController {
         		.body(result);
     }
 
-    @DeleteMapping("/fornecedors/{id}")
+    @DeleteMapping("/fornecedores/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         log.debug("Recuperando o fornecedor com id {}", id);
         service.excluir(id);

@@ -32,9 +32,8 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo("Northwind API", "API de exemplo", "0.0.1", null, 
-        		new Contact("André Santos", "www.examplo.com", "email@company.com"),
-        		"License of API", "API license URL", Collections.emptyList());
-        return apiInfo;
+        return new ApiInfo("Northwind API", "API de exemplo", "0.0.1", null,
+                new Contact("André Santos", "www.examplo.com", "email@company.com"),
+                "License of API", "API license URL", Collections.emptyList());
     }
 }

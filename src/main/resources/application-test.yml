@@ -27,12 +27,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
 
 logging:
   level:
     ROOT: INFO
-    org.hibernate.SQL: DEBUG
+    org.hibernate.SQL: INFO
     br.com.formiga.northwind: DEBUG

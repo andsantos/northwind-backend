@@ -8,5 +8,5 @@ import br.com.andsantos.northwind.service.dto.ProdutoDTO;
 
 public interface ProdutoService extends CRUDService<ProdutoDTO> {
 
-	public Page<ProdutoDTO> listar(String nomeProduto, Pageable pageable);
+	Page<ProdutoDTO> listar(String nomeProduto, Pageable pageable);
 }

@@ -24,9 +24,9 @@ public class EmpregadoServiceImpl implements EmpregadoService {
 
     private final EmpregadoMapper mapper;
 
-    public EmpregadoServiceImpl(EmpregadoRepository EmpregadoRepository, EmpregadoMapper EmpregadoMapper) {
-        this.repository = EmpregadoRepository;
-        this.mapper = EmpregadoMapper;
+    public EmpregadoServiceImpl(EmpregadoRepository empregadoRepository, EmpregadoMapper empregadoMapper) {
+        this.repository = empregadoRepository;
+        this.mapper = empregadoMapper;
     }
 
 	@Override

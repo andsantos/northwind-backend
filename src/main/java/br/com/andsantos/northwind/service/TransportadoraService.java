@@ -8,5 +8,5 @@ import br.com.andsantos.northwind.service.dto.TransportadoraDTO;
 
 public interface TransportadoraService extends CRUDService<TransportadoraDTO> {
 
-	public Page<TransportadoraDTO> listar(String nomeTransportadora, Pageable pageable);
+	Page<TransportadoraDTO> listar(String nomeTransportadora, Pageable pageable);
 }

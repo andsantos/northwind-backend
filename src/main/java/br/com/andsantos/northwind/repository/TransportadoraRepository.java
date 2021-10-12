@@ -9,7 +9,7 @@ import br.com.andsantos.northwind.domain.Transportadora;
 
 @Repository
 public interface TransportadoraRepository extends JpaRepository<Transportadora, Long> {
-	Boolean existsByNomeTransportadora(String nomeTransportadora);
+	boolean existsByNomeTransportadora(String nomeTransportadora);
 
 	Page<Transportadora> findAllByNomeTransportadoraContaining(String nomeTransportadora, Pageable pageable);
 }

@@ -24,9 +24,9 @@ public class FornecedorServiceImpl implements FornecedorService {
 
     private final FornecedorMapper mapper;
 
-    public FornecedorServiceImpl(FornecedorRepository FornecedorRepository, FornecedorMapper FornecedorMapper) {
-        this.repository = FornecedorRepository;
-        this.mapper = FornecedorMapper;
+    public FornecedorServiceImpl(FornecedorRepository fornecedorRepository, FornecedorMapper fornecedorMapper) {
+        this.repository = fornecedorRepository;
+        this.mapper = fornecedorMapper;
     }
 
 	@Override

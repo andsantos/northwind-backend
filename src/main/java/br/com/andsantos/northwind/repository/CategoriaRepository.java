@@ -9,8 +9,7 @@ import br.com.andsantos.northwind.domain.Categoria;
 
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
-
-	Boolean existsByNomeCategoria(String nomeCategoria);
+	boolean existsByNomeCategoria(String nomeCategoria);
 
 	Page<Categoria> findAllByNomeCategoriaContaining(String nomeCategoria, Pageable pageable);
 }

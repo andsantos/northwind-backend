@@ -24,65 +24,65 @@ public class TransportadoraServiceImpl implements TransportadoraService {
 
     private final TransportadoraMapper mapper;
 
-    public TransportadoraServiceImpl(TransportadoraRepository TransportadorRepository, TransportadoraMapper TransportadorMapper) {
-        this.repository = TransportadorRepository;
-        this.mapper = TransportadorMapper;
+    public TransportadoraServiceImpl(TransportadoraRepository transportadorRepository,
+            TransportadoraMapper transportadorMapper) {
+        this.repository = transportadorRepository;
+        this.mapper = transportadorMapper;
     }
 
-	@Override
-	public TransportadoraDTO salvar(TransportadoraDTO dto) {
+    @Override
+    public TransportadoraDTO salvar(TransportadoraDTO dto) {
         log.debug("Gravando Transportadora {} ", dto.getNomeTransportadora());
 
-		if (repository.existsByNomeTransportadora(dto.getNomeTransportadora())) {
-			throw new ObjectAlreadyExistsException("Transportadora já cadastrada.");
-		}
-		Transportadora category = mapper.toEntity(dto);
+        if (repository.existsByNomeTransportadora(dto.getNomeTransportadora())) {
+            throw new ObjectAlreadyExistsException("Transportadora já cadastrada.");
+        }
+        Transportadora category = mapper.toEntity(dto);
         category = repository.save(category);
         return mapper.toDto(category);
-	}
+    }
 
-	@Override
-	public TransportadoraDTO atualizar(TransportadoraDTO dto) {
-        return repository
-        		.findById(dto.getId())
-                .map(
-                    existingCategory -> {
-                        mapper.partialUpdate(existingCategory, dto);
-                        return existingCategory;
-                    }
-                )
+    @Override
+    public TransportadoraDTO atualizar(TransportadoraDTO dto) {
+        return repository.findById(dto.getId())
+                .map(existingCategory -> {
+                    mapper.partialUpdate(existingCategory, dto);
+                    return existingCategory;
+                })
                 .map(repository::save)
                 .map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException("Transportador não encontrada."));
-	}
+                .orElseThrow(() -> new NotFoundException("Transportador não encontrada."));
+    }
 
-	@Override
-	public void excluir(Long id) {
+    @Override
+    public void excluir(Long id) {
         log.debug("Excluindo Transportador com id {}", id);
         repository.deleteById(id);
-	}
+    }
 
-	@Override
-	public TransportadoraDTO obter(Long id) {
+    @Override
+    public TransportadoraDTO obter(Long id) {
         log.debug("Recuperando a Transportador com id {}", id);
         return repository.findById(id)
-        		.map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException("Transportadora não encontrada."));
-	}
+                .map(mapper::toDto)
+                .orElseThrow(() -> new NotFoundException("Transportadora não encontrada."));
+    }
 
-	@Override
-	public Page<TransportadoraDTO> listar(Pageable pageable) {
+    @Override
+    public Page<TransportadoraDTO> listar(Pageable pageable) {
         log.debug("Recuperando todas as Transportadors");
-        return repository.findAll(pageable).map(mapper::toDto);
-	}
+        return repository.findAll(pageable)
+                .map(mapper::toDto);
+    }
 
-	@Override
-	public Page<TransportadoraDTO> listar(String nomeTransportadora, Pageable pageable) {
-		if (nomeTransportadora == null) {
-			return listar(pageable);
-		} else {
-	        log.debug("Recuperando todas as Transportadors contendo {}", nomeTransportadora);
-	        return repository.findAllByNomeTransportadoraContaining(nomeTransportadora, pageable).map(mapper::toDto);
-		}
-	}
+    @Override
+    public Page<TransportadoraDTO> listar(String nomeTransportadora, Pageable pageable) {
+        if (nomeTransportadora == null) {
+            return listar(pageable);
+        } else {
+            log.debug("Recuperando todas as Transportadors contendo {}", nomeTransportadora);
+            return repository.findAllByNomeTransportadoraContaining(nomeTransportadora, pageable)
+                    .map(mapper::toDto);
+        }
+    }
 }

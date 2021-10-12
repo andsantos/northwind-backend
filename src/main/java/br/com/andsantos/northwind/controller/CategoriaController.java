@@ -31,14 +31,15 @@ import br.com.andsantos.northwind.services.errors.BadRequestException;
 public class CategoriaController {
     private final Logger log = LoggerFactory.getLogger(CategoriaController.class);
 
-	private CategoriaService service;
+    private CategoriaService service;
 
-	public CategoriaController(CategoriaService categoriaService) {
-		this.service = categoriaService;
-	}
+    public CategoriaController(CategoriaService categoriaService) {
+        this.service = categoriaService;
+    }
 
     @GetMapping("/categorias")
-    public ResponseEntity<List<CategoriaDTO>> listar(Pageable pageable, @RequestParam(required = false) String nome) {
+    public ResponseEntity<List<CategoriaDTO>> listar(Pageable pageable,
+            @RequestParam(required = false) String nome) {
         log.debug("Recuperando todas as categorias");
         Page<CategoriaDTO> page = service.listar(nome, pageable);
         return ResponseEntity.ok().body(page.getContent());
@@ -53,33 +54,32 @@ public class CategoriaController {
 
     @PostMapping("/categorias")
     public ResponseEntity<CategoriaDTO> salvar(@Valid @RequestBody CategoriaDTO dto)
-    		throws URISyntaxException {
+            throws URISyntaxException {
         log.debug("Gravando categoria {} ", dto);
         CategoriaDTO result = service.salvar(dto);
         return ResponseEntity
-        		.created(new URI("/categorias/" + result.getId()))
-        		.body(result);
+                .created(new URI("/categorias/" + result.getId()))
+                .body(result);
     }
 
     @PutMapping("/categorias/{id}")
     public ResponseEntity<CategoriaDTO> atualizar(
-    		@PathVariable(value = "id", required = false) final Long id, 
-    		@Valid @RequestBody CategoriaDTO dto) 
-    		throws URISyntaxException {
+            @PathVariable(value = "id", required = false) final Long id,
+            @Valid @RequestBody CategoriaDTO dto) throws URISyntaxException {
         log.debug("Atualizando categoria {} ", dto);
 
         if (dto.getId() == null || dto.getId() == 0) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         if (!Objects.equals(id, dto.getId())) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         CategoriaDTO result = service.atualizar(dto);
         return ResponseEntity
-        		.created(new URI("/categorias/" + result.getId()))
-        		.body(result);
+                .created(new URI("/categorias/" + result.getId()))
+                .body(result);
     }
 
     @DeleteMapping("/categorias/{id}")

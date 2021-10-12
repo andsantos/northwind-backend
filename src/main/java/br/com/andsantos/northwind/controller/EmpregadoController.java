@@ -33,8 +33,8 @@ public class EmpregadoController {
 
 	private EmpregadoService service;
 
-	public EmpregadoController(EmpregadoService EmpregadoService) {
-		this.service = EmpregadoService;
+	public EmpregadoController(EmpregadoService empregadoService) {
+		this.service = empregadoService;
 	}
 
     @GetMapping("/empregados")

@@ -9,7 +9,7 @@ import br.com.andsantos.northwind.domain.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-	Boolean existsByNomeEmpresa(String nomeEmpresa);
+	boolean existsByNomeEmpresa(String nomeEmpresa);
 
 	Page<Cliente> findAllByNomeEmpresaContaining(String nomeEmpresa, Pageable pageable);
 }

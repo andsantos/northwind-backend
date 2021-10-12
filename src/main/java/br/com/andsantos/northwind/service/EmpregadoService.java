@@ -8,5 +8,5 @@ import br.com.andsantos.northwind.service.dto.EmpregadoDTO;
 
 public interface EmpregadoService extends CRUDService<EmpregadoDTO> {
 
-	public Page<EmpregadoDTO> listar(String nomeEmpregado, Pageable pageable);
+	Page<EmpregadoDTO> listar(String nomeEmpregado, Pageable pageable);
 }

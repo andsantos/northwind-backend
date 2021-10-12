@@ -33,12 +33,13 @@ public class ProdutoController {
 
 	private ProdutoService service;
 
-	public ProdutoController(ProdutoService ProdutoService) {
-		this.service = ProdutoService;
+	public ProdutoController(ProdutoService produtoService) {
+		this.service = produtoService;
 	}
 
-    @GetMapping("/Produtos")
-    public ResponseEntity<List<ProdutoDTO>> listar(Pageable pageable, @RequestParam(required = false) String nome) {
+    @GetMapping("/produtos")
+    public ResponseEntity<List<ProdutoDTO>> listar(Pageable pageable,
+            @RequestParam(required = false) String nome) {
         log.debug("Recuperando todos os produtos");
         Page<ProdutoDTO> page = service.listar(nome, pageable);
         return ResponseEntity.ok().body(page.getContent());
@@ -63,7 +64,7 @@ public class ProdutoController {
 
     @PutMapping("/produtos/{id}")
     public ResponseEntity<ProdutoDTO> atualizar(
-    		@PathVariable(value = "id", required = false) final Long id, 
+    		@PathVariable(value = "id", required = false) final Long id,
     		@Valid @RequestBody ProdutoDTO dto) 
     		throws URISyntaxException {
         log.debug("Atualizando Produto {} ", dto);

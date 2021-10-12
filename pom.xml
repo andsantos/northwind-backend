@@ -19,6 +19,8 @@
 		<jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 		<mapstruct.version>1.4.2.Final</mapstruct.version>
 		<io.springfox.version>3.0.0</io.springfox.version>
+		<maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+		<com.puppycrawl.tools.version>9.0</com.puppycrawl.tools.version>
 	</properties>
 	<dependencies>
         <dependency>
@@ -162,6 +164,21 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle-plugin.version}</version>
+                    <configuration>
+                       <configLocation>checkstyle/custom_checks.xml</configLocation>
+                    </configuration>
+                    <dependencies>
+                       <dependency>
+                       <groupId>com.puppycrawl.tools</groupId>
+                       <artifactId>checkstyle</artifactId>
+                       <version>${com.puppycrawl.tools.version}</version>
+                       </dependency>
+                    </dependencies>
                 </plugin>
 		</plugins>
 	</build>
