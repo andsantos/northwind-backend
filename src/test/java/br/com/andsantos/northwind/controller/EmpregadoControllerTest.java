@@ -41,6 +41,8 @@ public class EmpregadoControllerTest {
     private String TITULO_DE_CORTESIA = "ERT";
     private LocalDate DATA_NASCIMENTO = LocalDate.of(1990, 1, 1);
     private LocalDate DATA_ADMISSAO = LocalDate.of(2020, 1, 1);
+    private String DATA_NASCIMENTO_STRING = "01/01/1990";
+    private String DATA_ADMISSAO_STRING = "01/01/2020";
     private String ENDERECO = "ASDFGHJKL";
     private String CIDADE = "ASDFGHJKL";
     private String REGIAO = "ZXCVBNM";
@@ -144,8 +146,8 @@ public class EmpregadoControllerTest {
             .andExpect(jsonPath("$.[*].nomeEmpregado").value(hasItem(NOME_EMPREGADO)))
             .andExpect(jsonPath("$.[*].titulo").value(hasItem(TITULO)))
             .andExpect(jsonPath("$.[*].tituloDeCortesia").value(hasItem(TITULO_DE_CORTESIA)))
-            .andExpect(jsonPath("$.[*].dataNascimento").value(hasItem(DATA_NASCIMENTO.toString())))
-            .andExpect(jsonPath("$.[*].dataAdmissao").value(hasItem(DATA_ADMISSAO.toString())))
+            .andExpect(jsonPath("$.[*].dataNascimento").value(hasItem(DATA_NASCIMENTO_STRING)))
+            .andExpect(jsonPath("$.[*].dataAdmissao").value(hasItem(DATA_ADMISSAO_STRING)))
             .andExpect(jsonPath("$.[*].endereco").value(hasItem(ENDERECO)))
             .andExpect(jsonPath("$.[*].cidade").value(hasItem(CIDADE)))
             .andExpect(jsonPath("$.[*].regiao").value(hasItem(REGIAO)))
@@ -171,8 +173,8 @@ public class EmpregadoControllerTest {
             .andExpect(jsonPath("$.[*].nomeEmpregado").value(hasItem(NOME_EMPREGADO)))
             .andExpect(jsonPath("$.[*].titulo").value(hasItem(TITULO)))
             .andExpect(jsonPath("$.[*].tituloDeCortesia").value(hasItem(TITULO_DE_CORTESIA)))
-            .andExpect(jsonPath("$.[*].dataNascimento").value(hasItem(DATA_NASCIMENTO.toString())))
-            .andExpect(jsonPath("$.[*].dataAdmissao").value(hasItem(DATA_ADMISSAO.toString())))
+            .andExpect(jsonPath("$.[*].dataNascimento").value(hasItem(DATA_NASCIMENTO_STRING)))
+            .andExpect(jsonPath("$.[*].dataAdmissao").value(hasItem(DATA_ADMISSAO_STRING)))
             .andExpect(jsonPath("$.[*].endereco").value(hasItem(ENDERECO)))
             .andExpect(jsonPath("$.[*].cidade").value(hasItem(CIDADE)))
             .andExpect(jsonPath("$.[*].regiao").value(hasItem(REGIAO)))
@@ -199,8 +201,8 @@ public class EmpregadoControllerTest {
             .andExpect(jsonPath("$.nomeEmpregado").value(NOME_EMPREGADO))
             .andExpect(jsonPath("$.titulo").value(TITULO))
             .andExpect(jsonPath("$.tituloDeCortesia").value(TITULO_DE_CORTESIA))
-            .andExpect(jsonPath("$.dataNascimento").value(DATA_NASCIMENTO.toString()))
-            .andExpect(jsonPath("$.dataAdmissao").value(DATA_ADMISSAO.toString()))
+            .andExpect(jsonPath("$.dataNascimento").value(DATA_NASCIMENTO_STRING))
+            .andExpect(jsonPath("$.dataAdmissao").value(DATA_ADMISSAO_STRING))
             .andExpect(jsonPath("$.endereco").value(ENDERECO))
             .andExpect(jsonPath("$.cidade").value(CIDADE))
             .andExpect(jsonPath("$.regiao").value(REGIAO))

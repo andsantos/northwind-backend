@@ -3,6 +3,11 @@ package br.com.andsantos.northwind.service.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import br.com.andsantos.northwind.service.serialize.LocalDateDeserializer;
+import br.com.andsantos.northwind.service.serialize.LocalDateSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,8 +27,12 @@ public class EmpregadoDTO implements Serializable {
 
     private String tituloDeCortesia;
 
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dataNascimento;
 
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dataAdmissao;
 
     private String endereco;

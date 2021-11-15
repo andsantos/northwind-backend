@@ -9,7 +9,7 @@ pipeline {
 
         stage('test') {
             steps {
-                sh 'mvn test -P test -Dspring.profiles.active=test'
+                sh 'mvn test -Dspring.profiles.active=test'
             }
         }
 

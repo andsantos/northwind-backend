@@ -3,8 +3,11 @@ package br.com.andsantos.northwind.service.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import br.com.andsantos.northwind.domain.Categoria;
-import br.com.andsantos.northwind.domain.Fornecedor;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import br.com.andsantos.northwind.service.serialize.BigDecimalDeserializer;
+import br.com.andsantos.northwind.service.serialize.BigDecimalSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,13 +22,19 @@ public class ProdutoDTO implements Serializable {
 
 	private String quantidadePorUnidade;
 
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    @JsonDeserialize(using = BigDecimalDeserializer.class)
 	private BigDecimal precoUnitario;
 
 	private Long unidadesEmEstoque;
 
 	private Boolean descontinuado;
 
-	private Fornecedor fornecedor;
+	private Long fornecedorId;
 
-	private Categoria categoria;
+	private String nomeFornecedor;
+
+	private Long categoriaId;
+
+	private String nomeCategoria;
 }

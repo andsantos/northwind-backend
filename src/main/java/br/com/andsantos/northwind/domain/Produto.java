@@ -30,6 +30,7 @@ public class Produto implements Serializable {
     @Column(name = "product_name", nullable = false)
     private String nomeProduto;
 
+    @NotNull
     @Column(name = "quantity_per_unit")
     private String quantidadePorUnidade;
 
@@ -39,12 +40,15 @@ public class Produto implements Serializable {
     @Column(name = "units_in_stock")
     private Long unidadesEmEstoque;
 
+    @NotNull
     @Column(name = "discontinued")
     private Boolean descontinuado;
 
+    @NotNull
     @ManyToOne
     private Fornecedor fornecedor;
 
+    @NotNull
     @ManyToOne
     private Categoria categoria;
 }

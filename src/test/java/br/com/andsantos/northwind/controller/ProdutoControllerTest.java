@@ -37,13 +37,14 @@ public class ProdutoControllerTest {
 
     private static final String NOME_PRODUTO = "AAAAAAAAAAAAA";
     private static final String QUANTIDADE_POR_UNIDADE = "AAAA";
-    private static final BigDecimal PRECO_UNITARIO = BigDecimal.ONE;
+    private static final BigDecimal PRECO_UNITARIO = new BigDecimal(1000).setScale(2);
+    private static final String PRECO_UNITARIO_STRING = "1.000,00";
     private static final Long UNIDADES_EM_ESTOQUE = Long.valueOf(1);
     private static final Boolean DESCONTINUADO = Boolean.FALSE;
 
     private static final String NOME_PRODUTO_ALTERADO = "BBBBBBBBBBBB";
     private static final String QUANTIDADE_POR_UNIDADE_ALTERADO = "BBB";
-    private static final BigDecimal PRECO_UNITARIO_ALTERADO = BigDecimal.ZERO;
+    private static final BigDecimal PRECO_UNITARIO_ALTERADO = new BigDecimal(1500).setScale(2);
     private static final Long UNIDADES_EM_ESTOQUE_ALTERADO = Long.valueOf(2);
     private static final Boolean DESCONTINUADO_ALTERADO = Boolean.TRUE;
 
@@ -83,7 +84,7 @@ public class ProdutoControllerTest {
         assertThat(test.getNomeProduto()).isEqualTo(NOME_PRODUTO);
         assertThat(test.getQuantidadePorUnidade()).isEqualTo(QUANTIDADE_POR_UNIDADE);
         assertThat(test.getPrecoUnitario()).isEqualTo(PRECO_UNITARIO);
-        assertThat(test.getUnidadesEmEstoque()).isEqualTo(UNIDADES_EM_ESTOQUE);
+        assertThat(test.getUnidadesEmEstoque()).isEqualTo(UNIDADES_EM_ESTOQUE.intValue());
         assertThat(test.getDescontinuado()).isEqualTo(DESCONTINUADO);
     }
 
@@ -99,8 +100,8 @@ public class ProdutoControllerTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
             .andExpect(jsonPath("$.[*].nomeProduto").value(hasItem(NOME_PRODUTO)))
             .andExpect(jsonPath("$.[*].quantidadePorUnidade").value(hasItem(QUANTIDADE_POR_UNIDADE)))
-            .andExpect(jsonPath("$.[*].precoUnitario").value(hasItem(PRECO_UNITARIO.toString())))
-            .andExpect(jsonPath("$.[*].unidadesEmEstoque").value(hasItem(UNIDADES_EM_ESTOQUE)))
+            .andExpect(jsonPath("$.[*].precoUnitario").value(hasItem(PRECO_UNITARIO_STRING)))
+            .andExpect(jsonPath("$.[*].unidadesEmEstoque").value(hasItem(UNIDADES_EM_ESTOQUE.intValue())))
             .andExpect(jsonPath("$.[*].descontinuado").value(hasItem(DESCONTINUADO)));
     }
 
@@ -116,8 +117,8 @@ public class ProdutoControllerTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
             .andExpect(jsonPath("$.[*].nomeProduto").value(hasItem(NOME_PRODUTO)))
             .andExpect(jsonPath("$.[*].quantidadePorUnidade").value(hasItem(QUANTIDADE_POR_UNIDADE)))
-            .andExpect(jsonPath("$.[*].precoUnitario").value(hasItem(PRECO_UNITARIO.toString())))
-            .andExpect(jsonPath("$.[*].unidadesEmEstoque").value(hasItem(UNIDADES_EM_ESTOQUE)))
+            .andExpect(jsonPath("$.[*].precoUnitario").value(hasItem(PRECO_UNITARIO_STRING)))
+            .andExpect(jsonPath("$.[*].unidadesEmEstoque").value(hasItem(UNIDADES_EM_ESTOQUE.intValue())))
             .andExpect(jsonPath("$.[*].descontinuado").value(hasItem(DESCONTINUADO)));
     }
 
@@ -133,7 +134,7 @@ public class ProdutoControllerTest {
             .andExpect(jsonPath("$.id").value(obj.getId().intValue()))
             .andExpect(jsonPath("$.nomeProduto").value(NOME_PRODUTO))
             .andExpect(jsonPath("$.quantidadePorUnidade").value(QUANTIDADE_POR_UNIDADE))
-            .andExpect(jsonPath("$.precoUnitario").value(PRECO_UNITARIO))
+            .andExpect(jsonPath("$.precoUnitario").value(PRECO_UNITARIO_STRING))
             .andExpect(jsonPath("$.unidadesEmEstoque").value(UNIDADES_EM_ESTOQUE))
             .andExpect(jsonPath("$.descontinuado").value(DESCONTINUADO));
     }
