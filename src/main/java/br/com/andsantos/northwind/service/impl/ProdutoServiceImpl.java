@@ -7,7 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.andsantos.northwind.domain.Categoria;
+import br.com.andsantos.northwind.domain.Fornecedor;
 import br.com.andsantos.northwind.domain.Produto;
+import br.com.andsantos.northwind.repository.CategoriaRepository;
+import br.com.andsantos.northwind.repository.FornecedorRepository;
 import br.com.andsantos.northwind.repository.ProdutoRepository;
 import br.com.andsantos.northwind.service.ProdutoService;
 import br.com.andsantos.northwind.service.dto.ProdutoDTO;
@@ -22,11 +26,20 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     private final ProdutoRepository repository;
 
+    private final CategoriaRepository categoriaRepository;
+
+    private final FornecedorRepository fornecedorRepository;
+
     private final ProdutoMapper mapper;
 
-    public ProdutoServiceImpl(ProdutoRepository produtoRepository, ProdutoMapper produtoMapper) {
+    public ProdutoServiceImpl(ProdutoRepository produtoRepository, 
+            CategoriaRepository categoriaRepository,
+            FornecedorRepository fornecedorRepository,
+            ProdutoMapper produtoMapper) {
         this.repository = produtoRepository;
         this.mapper = produtoMapper;
+        this.categoriaRepository = categoriaRepository;
+        this.fornecedorRepository = fornecedorRepository;
     }
 
     @Override
@@ -36,9 +49,19 @@ public class ProdutoServiceImpl implements ProdutoService {
         if (repository.existsByNomeProduto(dto.getNomeProduto())) {
             throw new ObjectAlreadyExistsException("Produto já cadastrada.");
         }
-        Produto category = mapper.toEntity(dto);
-        category = repository.save(category);
-        return mapper.toDto(category);
+
+        Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada."));
+
+        
+        Fornecedor fornecedor = fornecedorRepository.findById(dto.getFornecedorId())
+                .orElseThrow(() -> new NotFoundException("Fornecedor não encontrado."));
+        
+        Produto obj = mapper.toEntity(dto);
+        obj.setCategoria(categoria);
+        obj.setFornecedor(fornecedor);
+
+        return mapper.toDto(repository.save(obj));
     }
 
     @Override
@@ -52,7 +75,11 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public void excluir(Long id) {
         log.debug("Excluindo Produto com id {}", id);
-        repository.deleteById(id);
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new NotFoundException("Produto não encontrado.");
+        }
     }
 
     @Override

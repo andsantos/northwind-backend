@@ -22,7 +22,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.andsantos.core.controller.IntegrationTest;
+import br.com.andsantos.northwind.domain.Categoria;
+import br.com.andsantos.northwind.domain.Fornecedor;
 import br.com.andsantos.northwind.domain.Produto;
+import br.com.andsantos.northwind.repository.CategoriaRepository;
+import br.com.andsantos.northwind.repository.FornecedorRepository;
 import br.com.andsantos.northwind.repository.ProdutoRepository;
 import br.com.andsantos.northwind.service.dto.ProdutoDTO;
 import br.com.andsantos.northwind.service.mapper.ProdutoMapper;
@@ -48,11 +52,33 @@ public class ProdutoControllerTest {
     private static final Long UNIDADES_EM_ESTOQUE_ALTERADO = Long.valueOf(2);
     private static final Boolean DESCONTINUADO_ALTERADO = Boolean.TRUE;
 
+    private static final String PADRAO_NOME_CATEGORIA = "AAAAAAAAAAAAA";
+    private static final String PADRAO_DESCRICAO = "AAAAAAAAAAAAAAAAAA";
+    private static final String PADRAO_IMAGEM = "AAAAAAAAAAAA";
+
+    private static final String NOME_FORNECEDOR = "AAAAAAAAAAAAAAAA";
+    private static final String NOME_CONTATO = "AAAAAAAAAAAAAAAA";
+    private static final String TITULO = "AAAAAAAAAAAAAAAA";
+    private static final String ENDERECO = "AAAAAAAAAAAAAAAA";
+    private static final String CIDADE = "AAAAAAAAAAAAAAAA";
+    private static final String REGIAO = "AAAAAAAAAAAAAAAA";
+    private static final String NUMERO_CEP = "00000-000";
+    private static final String SIGLA_PAIS = "AA";
+    private static final String TELEFONE = "(AA) AAAA-AAAA";
+    private static final String FAX = "(AA) AAAA-AAAA";
+    private static final String HOMEPAGE = "AAAAAAAAAAAAAAAA";
+
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ProdutoRepository repository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
 
     @Autowired
     private ProdutoMapper mapper;
@@ -64,6 +90,38 @@ public class ProdutoControllerTest {
         dto.setPrecoUnitario(PRECO_UNITARIO);
         dto.setUnidadesEmEstoque(UNIDADES_EM_ESTOQUE);
         dto.setDescontinuado(DESCONTINUADO);
+
+        Categoria categoria = categoriaRepository.save(criarCategoria());
+        dto.setCategoria(categoria);
+
+        Fornecedor fornecedor = fornecedorRepository.save(criarFornecedor());
+        dto.setFornecedor(fornecedor);
+
+        return dto;
+    }
+
+    public Fornecedor criarFornecedor() {
+        var dto = new Fornecedor();
+        dto.setNomeFornecedor(NOME_FORNECEDOR);
+        dto.setNomeContato(NOME_CONTATO);
+        dto.setTitulo(TITULO);
+        dto.setEndereco(ENDERECO);
+        dto.setCidade(CIDADE);
+        dto.setRegiao(REGIAO);
+        dto.setNumeroCEP(NUMERO_CEP);
+        dto.setSiglaPais(SIGLA_PAIS);
+        dto.setTelefone(TELEFONE);
+        dto.setFax(FAX);
+        dto.setHomePage(HOMEPAGE);
+
+        return dto;
+    }
+
+    public Categoria criarCategoria() {
+        var dto = new Categoria();
+        dto.setNomeCategoria(PADRAO_NOME_CATEGORIA);
+        dto.setDescricao(PADRAO_DESCRICAO);
+        dto.setImagem(PADRAO_IMAGEM);
 
         return dto;
     }
@@ -98,6 +156,8 @@ public class ProdutoControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.[*].fornecedorId").value(hasItem(obj.getFornecedor().getId().intValue())))
+            .andExpect(jsonPath("$.[*].categoriaId").value(hasItem(obj.getCategoria().getId().intValue())))
             .andExpect(jsonPath("$.[*].nomeProduto").value(hasItem(NOME_PRODUTO)))
             .andExpect(jsonPath("$.[*].quantidadePorUnidade").value(hasItem(QUANTIDADE_POR_UNIDADE)))
             .andExpect(jsonPath("$.[*].precoUnitario").value(hasItem(PRECO_UNITARIO_STRING)))
@@ -115,6 +175,8 @@ public class ProdutoControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.[*].fornecedorId").value(hasItem(obj.getFornecedor().getId().intValue())))
+            .andExpect(jsonPath("$.[*].categoriaId").value(hasItem(obj.getCategoria().getId().intValue())))
             .andExpect(jsonPath("$.[*].nomeProduto").value(hasItem(NOME_PRODUTO)))
             .andExpect(jsonPath("$.[*].quantidadePorUnidade").value(hasItem(QUANTIDADE_POR_UNIDADE)))
             .andExpect(jsonPath("$.[*].precoUnitario").value(hasItem(PRECO_UNITARIO_STRING)))
@@ -132,6 +194,8 @@ public class ProdutoControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(obj.getId().intValue()))
+            .andExpect(jsonPath("$.fornecedorId").value(obj.getFornecedor().getId().intValue()))
+            .andExpect(jsonPath("$.categoriaId").value(obj.getCategoria().getId().intValue()))
             .andExpect(jsonPath("$.nomeProduto").value(NOME_PRODUTO))
             .andExpect(jsonPath("$.quantidadePorUnidade").value(QUANTIDADE_POR_UNIDADE))
             .andExpect(jsonPath("$.precoUnitario").value(PRECO_UNITARIO_STRING))

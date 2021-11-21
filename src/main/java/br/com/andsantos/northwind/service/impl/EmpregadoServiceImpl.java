@@ -36,9 +36,9 @@ public class EmpregadoServiceImpl implements EmpregadoService {
 		if (repository.existsByNomeEmpregado(dto.getNomeEmpregado())) {
 			throw new ObjectAlreadyExistsException("Empregado já cadastrada.");
 		}
-		Empregado category = mapper.toEntity(dto);
-        category = repository.save(category);
-        return mapper.toDto(category);
+
+        Empregado obj = mapper.toEntity(dto);
+        return mapper.toDto(repository.save(obj));
 	}
 
 	@Override
@@ -59,7 +59,11 @@ public class EmpregadoServiceImpl implements EmpregadoService {
 	@Override
 	public void excluir(Long id) {
         log.debug("Excluindo Empregado com id {}", id);
-        repository.deleteById(id);
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new NotFoundException("Empregado não encontrado.");
+        }
 	}
 
 	@Override

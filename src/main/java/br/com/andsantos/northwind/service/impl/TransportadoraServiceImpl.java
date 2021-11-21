@@ -37,9 +37,9 @@ public class TransportadoraServiceImpl implements TransportadoraService {
         if (repository.existsByNomeTransportadora(dto.getNomeTransportadora())) {
             throw new ObjectAlreadyExistsException("Transportadora já cadastrada.");
         }
-        Transportadora category = mapper.toEntity(dto);
-        category = repository.save(category);
-        return mapper.toDto(category);
+
+        Transportadora obj = mapper.toEntity(dto);
+        return mapper.toDto(repository.save(obj));
     }
 
     @Override
@@ -57,7 +57,11 @@ public class TransportadoraServiceImpl implements TransportadoraService {
     @Override
     public void excluir(Long id) {
         log.debug("Excluindo Transportador com id {}", id);
-        repository.deleteById(id);
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new NotFoundException("Transportadora não encontrada.");
+        }
     }
 
     @Override
