@@ -8,16 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.andsantos.northwind.domain.Cliente;
+import br.com.andsantos.northwind.exception.NotFoundException;
+import br.com.andsantos.northwind.exception.ObjectAlreadyExistsException;
 import br.com.andsantos.northwind.repository.ClienteRepository;
 import br.com.andsantos.northwind.service.ClienteService;
 import br.com.andsantos.northwind.service.dto.ClienteDTO;
 import br.com.andsantos.northwind.service.mapper.ClienteMapper;
-import br.com.andsantos.northwind.services.errors.NotFoundException;
-import br.com.andsantos.northwind.services.errors.ObjectAlreadyExistsException;
 
 @Service
 @Transactional
 public class ClienteServiceImpl implements ClienteService {
+    private static final String CLIENTE_NOT_FOUND = "Cliente não encontrado.";
+
 	private final Logger log = LoggerFactory.getLogger(ClienteServiceImpl.class);
 
 	private final ClienteRepository repository;
@@ -50,7 +52,7 @@ public class ClienteServiceImpl implements ClienteService {
 				})
 				.map(repository::save)
 				.map(mapper::toDto)
-				.orElseThrow(() -> new NotFoundException("Cliente não encontrada."));
+				.orElseThrow(() -> new NotFoundException(CLIENTE_NOT_FOUND));
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class ClienteServiceImpl implements ClienteService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new NotFoundException("Cliente não encontrado.");
+            throw new NotFoundException(CLIENTE_NOT_FOUND);
         }
 	}
 
@@ -68,7 +70,7 @@ public class ClienteServiceImpl implements ClienteService {
 		log.debug("Recuperando a Cliente com id {}", id);
 		return repository.findById(id)
 				.map(mapper::toDto)
-				.orElseThrow(() -> new NotFoundException("Cliente não encontrada."));
+				.orElseThrow(() -> new NotFoundException(CLIENTE_NOT_FOUND));
 	}
 
 	@Override

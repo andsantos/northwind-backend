@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PedidoDetalheDTO implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private Long id;
 

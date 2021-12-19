@@ -22,20 +22,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.andsantos.northwind.exception.BadRequestException;
 import br.com.andsantos.northwind.service.EmpregadoService;
 import br.com.andsantos.northwind.service.dto.EmpregadoDTO;
-import br.com.andsantos.northwind.services.errors.BadRequestException;
 
 @RestController
 @RequestMapping("/api")
 public class EmpregadoController {
     private final Logger log = LoggerFactory.getLogger(EmpregadoController.class);
 
-	private EmpregadoService service;
+    private EmpregadoService service;
 
-	public EmpregadoController(EmpregadoService empregadoService) {
-		this.service = empregadoService;
-	}
+    public EmpregadoController(EmpregadoService empregadoService) {
+        this.service = empregadoService;
+    }
 
     @GetMapping("/empregados")
     public ResponseEntity<List<EmpregadoDTO>> listar(Pageable pageable, @RequestParam(required = false) String nome) {
@@ -52,34 +52,27 @@ public class EmpregadoController {
     }
 
     @PostMapping("/empregados")
-    public ResponseEntity<EmpregadoDTO> salvar(@Valid @RequestBody EmpregadoDTO dto)
-    		throws URISyntaxException {
+    public ResponseEntity<EmpregadoDTO> salvar(@Valid @RequestBody EmpregadoDTO dto) throws URISyntaxException {
         log.debug("Gravando empregado {} ", dto);
         EmpregadoDTO result = service.salvar(dto);
-        return ResponseEntity
-        		.created(new URI("/Empregados/" + result.getId()))
-        		.body(result);
+        return ResponseEntity.created(new URI("/Empregados/" + result.getId())).body(result);
     }
 
     @PutMapping("/empregados/{id}")
-    public ResponseEntity<EmpregadoDTO> atualizar(
-    		@PathVariable(value = "id", required = false) final Long id, 
-    		@Valid @RequestBody EmpregadoDTO dto) 
-    		throws URISyntaxException {
+    public ResponseEntity<EmpregadoDTO> atualizar(@PathVariable(value = "id", required = false) final Long id,
+            @Valid @RequestBody EmpregadoDTO dto) throws URISyntaxException {
         log.debug("Atualizando empregado {} ", dto);
 
         if (dto.getId() == null || dto.getId() == 0) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         if (!Objects.equals(id, dto.getId())) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         EmpregadoDTO result = service.atualizar(dto);
-        return ResponseEntity
-        		.created(new URI("/empregados/" + result.getId()))
-        		.body(result);
+        return ResponseEntity.created(new URI("/empregados/" + result.getId())).body(result);
     }
 
     @DeleteMapping("/empregados/{id}")

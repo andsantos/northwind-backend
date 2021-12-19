@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.andsantos.northwind.exception.BadRequestException;
 import br.com.andsantos.northwind.service.CategoriaService;
 import br.com.andsantos.northwind.service.dto.CategoriaDTO;
-import br.com.andsantos.northwind.services.errors.BadRequestException;
 
 @RestController
 @RequestMapping("/api")

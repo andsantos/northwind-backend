@@ -7,7 +7,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -20,7 +19,7 @@ public class BigDecimalDeserializer extends StdDeserializer<BigDecimal> {
 
     @Override
     public BigDecimal deserialize(JsonParser jp, DeserializationContext ctxt)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator('.');
         symbols.setDecimalSeparator(',');

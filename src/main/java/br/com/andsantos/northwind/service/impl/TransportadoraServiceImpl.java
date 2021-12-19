@@ -8,16 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.andsantos.northwind.domain.Transportadora;
+import br.com.andsantos.northwind.exception.NotFoundException;
+import br.com.andsantos.northwind.exception.ObjectAlreadyExistsException;
 import br.com.andsantos.northwind.repository.TransportadoraRepository;
 import br.com.andsantos.northwind.service.TransportadoraService;
 import br.com.andsantos.northwind.service.dto.TransportadoraDTO;
 import br.com.andsantos.northwind.service.mapper.TransportadoraMapper;
-import br.com.andsantos.northwind.services.errors.NotFoundException;
-import br.com.andsantos.northwind.services.errors.ObjectAlreadyExistsException;
 
 @Service
 @Transactional
 public class TransportadoraServiceImpl implements TransportadoraService {
+    private static final String TRANSPORTADORA_NOT_FOUND = "Transportadora não encontrada.";
+
     private final Logger log = LoggerFactory.getLogger(TransportadoraServiceImpl.class);
 
     private final TransportadoraRepository repository;
@@ -35,7 +37,7 @@ public class TransportadoraServiceImpl implements TransportadoraService {
         log.debug("Gravando Transportadora {} ", dto.getNomeTransportadora());
 
         if (repository.existsByNomeTransportadora(dto.getNomeTransportadora())) {
-            throw new ObjectAlreadyExistsException("Transportadora já cadastrada.");
+            throw new ObjectAlreadyExistsException(TRANSPORTADORA_NOT_FOUND);
         }
 
         Transportadora obj = mapper.toEntity(dto);
@@ -51,30 +53,30 @@ public class TransportadoraServiceImpl implements TransportadoraService {
                 })
                 .map(repository::save)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new NotFoundException("Transportador não encontrada."));
+                .orElseThrow(() -> new NotFoundException(TRANSPORTADORA_NOT_FOUND));
     }
 
     @Override
     public void excluir(Long id) {
-        log.debug("Excluindo Transportador com id {}", id);
+        log.debug("Excluindo Transportadora com id {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new NotFoundException("Transportadora não encontrada.");
+            throw new NotFoundException(TRANSPORTADORA_NOT_FOUND);
         }
     }
 
     @Override
     public TransportadoraDTO obter(Long id) {
-        log.debug("Recuperando a Transportador com id {}", id);
+        log.debug("Recuperando a Transportadora com id {}", id);
         return repository.findById(id)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new NotFoundException("Transportadora não encontrada."));
+                .orElseThrow(() -> new NotFoundException(TRANSPORTADORA_NOT_FOUND));
     }
 
     @Override
     public Page<TransportadoraDTO> listar(Pageable pageable) {
-        log.debug("Recuperando todas as Transportadors");
+        log.debug("Recuperando todas as Transportadoras");
         return repository.findAll(pageable)
                 .map(mapper::toDto);
     }
@@ -84,7 +86,7 @@ public class TransportadoraServiceImpl implements TransportadoraService {
         if (nomeTransportadora == null) {
             return listar(pageable);
         } else {
-            log.debug("Recuperando todas as Transportadors contendo {}", nomeTransportadora);
+            log.debug("Recuperando todas as Transportadoras contendo {}", nomeTransportadora);
             return repository.findAllByNomeTransportadoraContaining(nomeTransportadora, pageable)
                     .map(mapper::toDto);
         }

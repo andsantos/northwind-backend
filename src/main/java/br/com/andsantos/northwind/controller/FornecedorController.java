@@ -22,23 +22,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.andsantos.northwind.exception.BadRequestException;
 import br.com.andsantos.northwind.service.FornecedorService;
 import br.com.andsantos.northwind.service.dto.FornecedorDTO;
-import br.com.andsantos.northwind.services.errors.BadRequestException;
 
 @RestController
 @RequestMapping("/api")
 public class FornecedorController {
     private final Logger log = LoggerFactory.getLogger(FornecedorController.class);
 
-	private FornecedorService service;
+    private FornecedorService service;
 
-	public FornecedorController(FornecedorService fornecedorService) {
-		this.service = fornecedorService;
-	}
+    public FornecedorController(FornecedorService fornecedorService) {
+        this.service = fornecedorService;
+    }
 
     @GetMapping("/fornecedores")
-    public ResponseEntity<List<FornecedorDTO>> listar(Pageable pageable, @RequestParam(required = false) String nome) {
+    public ResponseEntity<List<FornecedorDTO>> listar(Pageable pageable,
+            @RequestParam(required = false) String nome) {
         log.debug("Recuperando todos os fornecedores");
         Page<FornecedorDTO> page = service.listar(nome, pageable);
         return ResponseEntity.ok().body(page.getContent());
@@ -53,33 +54,30 @@ public class FornecedorController {
 
     @PostMapping("/fornecedores")
     public ResponseEntity<FornecedorDTO> salvar(@Valid @RequestBody FornecedorDTO dto)
-    		throws URISyntaxException {
+            throws URISyntaxException {
         log.debug("Gravando fornecedor {} ", dto);
         FornecedorDTO result = service.salvar(dto);
         return ResponseEntity
-        		.created(new URI("/fornecedores/" + result.getId()))
-        		.body(result);
+                .created(new URI("/fornecedores/" + result.getId())).body(result);
     }
 
     @PutMapping("/fornecedores/{id}")
     public ResponseEntity<FornecedorDTO> atualizar(
-    		@PathVariable(value = "id", required = false) final Long id, 
-    		@Valid @RequestBody FornecedorDTO dto) 
-    		throws URISyntaxException {
+            @PathVariable(value = "id", required = false) final Long id,
+            @Valid @RequestBody FornecedorDTO dto) throws URISyntaxException {
         log.debug("Atualizando fornecedor {} ", dto);
 
         if (dto.getId() == null || dto.getId() == 0) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         if (!Objects.equals(id, dto.getId())) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         FornecedorDTO result = service.atualizar(dto);
         return ResponseEntity
-        		.created(new URI("/fornecedores/" + result.getId()))
-        		.body(result);
+                .created(new URI("/fornecedores/" + result.getId())).body(result);
     }
 
     @DeleteMapping("/fornecedores/{id}")

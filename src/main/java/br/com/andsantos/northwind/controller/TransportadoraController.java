@@ -22,20 +22,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.andsantos.northwind.exception.BadRequestException;
 import br.com.andsantos.northwind.service.TransportadoraService;
 import br.com.andsantos.northwind.service.dto.TransportadoraDTO;
-import br.com.andsantos.northwind.services.errors.BadRequestException;
 
 @RestController
 @RequestMapping("/api")
 public class TransportadoraController {
     private final Logger log = LoggerFactory.getLogger(TransportadoraController.class);
 
-	private TransportadoraService service;
+    private TransportadoraService service;
 
-	public TransportadoraController(TransportadoraService transportadoraService) {
-		this.service = transportadoraService;
-	}
+    public TransportadoraController(TransportadoraService transportadoraService) {
+        this.service = transportadoraService;
+    }
 
     @GetMapping("/transportadoras")
     public ResponseEntity<List<TransportadoraDTO>> listar(Pageable pageable,
@@ -53,34 +53,32 @@ public class TransportadoraController {
     }
 
     @PostMapping("/transportadoras")
-    public ResponseEntity<TransportadoraDTO> salvar(@Valid @RequestBody TransportadoraDTO dto)
-    		throws URISyntaxException {
+    public ResponseEntity<TransportadoraDTO> salvar(
+            @Valid @RequestBody TransportadoraDTO dto)
+            throws URISyntaxException {
         log.debug("Gravando transportadora {} ", dto);
         TransportadoraDTO result = service.salvar(dto);
         return ResponseEntity
-        		.created(new URI("/transportadoras/" + result.getId()))
-        		.body(result);
+                .created(new URI("/transportadoras/" + result.getId())).body(result);
     }
 
     @PutMapping("/transportadoras/{id}")
     public ResponseEntity<TransportadoraDTO> atualizar(
-    		@PathVariable(value = "id", required = false) final Long id, 
-    		@Valid @RequestBody TransportadoraDTO dto) 
-    		throws URISyntaxException {
+            @PathVariable(value = "id", required = false) final Long id,
+            @Valid @RequestBody TransportadoraDTO dto) throws URISyntaxException {
         log.debug("Atualizando transportadora {} ", dto);
 
         if (dto.getId() == null || dto.getId() == 0) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         if (!Objects.equals(id, dto.getId())) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         TransportadoraDTO result = service.atualizar(dto);
         return ResponseEntity
-        		.created(new URI("/transportadoras/" + result.getId()))
-        		.body(result);
+                .created(new URI("/transportadoras/" + result.getId())).body(result);
     }
 
     @DeleteMapping("/transportadoras/{id}")

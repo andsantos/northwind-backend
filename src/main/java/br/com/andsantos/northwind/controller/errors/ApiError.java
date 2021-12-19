@@ -10,47 +10,47 @@ public class ApiError {
     private String message;
     private List<String> errors;
 
-    public ApiError(HttpStatus status, String message) {
+    public ApiError(HttpStatus httpStatus, String mensagem) {
         super();
-        this.status = status;
-        this.message = message;
+        this.status = httpStatus;
+        this.message = mensagem;
     }
 
-    public ApiError(HttpStatus status, String message, List<String> errors) {
+    public ApiError(HttpStatus httpStatus, String mensagem, List<String> erros) {
         super();
-        this.status = status;
-        this.message = message;
-        this.errors = errors;
+        this.status = httpStatus;
+        this.message = mensagem;
+        this.errors = erros;
     }
 
-    public ApiError(HttpStatus status, String message, String error) {
+    public ApiError(HttpStatus httpStatus, String mensagem, String error) {
         super();
-        this.status = status;
-        this.message = message;
+        this.status = httpStatus;
+        this.message = mensagem;
         errors = Arrays.asList(error);
     }
 
-	public HttpStatus getStatus() {
-		return status;
-	}
+    public HttpStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(HttpStatus status) {
-		this.status = status;
-	}
+    public void setStatus(HttpStatus httpStatus) {
+        this.status = httpStatus;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    public void setMessage(String mensagem) {
+        this.message = mensagem;
+    }
 
-	public List<String> getErrors() {
-		return errors;
-	}
+    public List<String> getErrors() {
+        return errors;
+    }
 
-	public void setErrors(List<String> errors) {
-		this.errors = errors;
-	}
+    public void setErrors(List<String> erros) {
+        this.errors = erros;
+    }
 }

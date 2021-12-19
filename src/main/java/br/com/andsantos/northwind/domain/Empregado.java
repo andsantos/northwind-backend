@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "employees")
 public class Empregado implements Serializable {
-	private static final long serialVersionUID = -155753306950620360L;
+    private static final long serialVersionUID = -155753306950620360L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

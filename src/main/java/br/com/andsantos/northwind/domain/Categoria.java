@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "categories")
 public class Categoria implements Serializable {
-	private static final long serialVersionUID = 3812202292895824122L;
+    private static final long serialVersionUID = 3812202292895824122L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

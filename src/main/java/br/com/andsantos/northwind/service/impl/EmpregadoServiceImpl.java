@@ -8,16 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.andsantos.northwind.domain.Empregado;
+import br.com.andsantos.northwind.exception.NotFoundException;
+import br.com.andsantos.northwind.exception.ObjectAlreadyExistsException;
 import br.com.andsantos.northwind.repository.EmpregadoRepository;
 import br.com.andsantos.northwind.service.EmpregadoService;
 import br.com.andsantos.northwind.service.dto.EmpregadoDTO;
 import br.com.andsantos.northwind.service.mapper.EmpregadoMapper;
-import br.com.andsantos.northwind.services.errors.NotFoundException;
-import br.com.andsantos.northwind.services.errors.ObjectAlreadyExistsException;
 
 @Service
 @Transactional
 public class EmpregadoServiceImpl implements EmpregadoService {
+    private static final String EMPREGADO_NOT_FOUND = "Empregado não encontrado.";
+
     private final Logger log = LoggerFactory.getLogger(EmpregadoServiceImpl.class);
 
     private final EmpregadoRepository repository;
@@ -29,17 +31,17 @@ public class EmpregadoServiceImpl implements EmpregadoService {
         this.mapper = empregadoMapper;
     }
 
-	@Override
-	public EmpregadoDTO salvar(EmpregadoDTO dto) {
+    @Override
+    public EmpregadoDTO salvar(EmpregadoDTO dto) {
         log.debug("Gravando Empregado {} ", dto.getNomeEmpregado());
 
-		if (repository.existsByNomeEmpregado(dto.getNomeEmpregado())) {
-			throw new ObjectAlreadyExistsException("Empregado já cadastrada.");
-		}
+        if (repository.existsByNomeEmpregado(dto.getNomeEmpregado())) {
+            throw new ObjectAlreadyExistsException("Empregado já cadastrada.");
+        }
 
         Empregado obj = mapper.toEntity(dto);
         return mapper.toDto(repository.save(obj));
-	}
+    }
 
 	@Override
 	public EmpregadoDTO atualizar(EmpregadoDTO dto) {
@@ -53,7 +55,7 @@ public class EmpregadoServiceImpl implements EmpregadoService {
                 )
                 .map(repository::save)
                 .map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException("Empregado não encontrada."));
+        		.orElseThrow(() -> new NotFoundException(EMPREGADO_NOT_FOUND));
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class EmpregadoServiceImpl implements EmpregadoService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new NotFoundException("Empregado não encontrado.");
+            throw new NotFoundException(EMPREGADO_NOT_FOUND);
         }
 	}
 
@@ -71,7 +73,7 @@ public class EmpregadoServiceImpl implements EmpregadoService {
         log.debug("Recuperando a Empregado com id {}", id);
         return repository.findById(id)
         		.map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException("Empregado não encontrada."));
+        		.orElseThrow(() -> new NotFoundException(EMPREGADO_NOT_FOUND));
 	}
 
 	@Override

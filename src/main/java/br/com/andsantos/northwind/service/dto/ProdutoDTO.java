@@ -14,27 +14,27 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProdutoDTO implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Long id;
+    private Long id;
 
-	private String nomeProduto;
+    private String nomeProduto;
 
-	private String quantidadePorUnidade;
+    private String quantidadePorUnidade;
 
     @JsonSerialize(using = BigDecimalSerializer.class)
     @JsonDeserialize(using = BigDecimalDeserializer.class)
-	private BigDecimal precoUnitario;
+    private BigDecimal precoUnitario;
 
-	private Long unidadesEmEstoque;
+    private Long unidadesEmEstoque;
 
-	private Boolean descontinuado;
+    private Boolean descontinuado;
 
-	private Long fornecedorId;
+    private Long fornecedorId;
 
-	private String nomeFornecedor;
+    private String nomeFornecedor;
 
-	private Long categoriaId;
+    private Long categoriaId;
 
-	private String nomeCategoria;
+    private String nomeCategoria;
 }

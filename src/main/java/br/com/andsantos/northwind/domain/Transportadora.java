@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "shippers")
 public class Transportadora implements Serializable {
-	private static final long serialVersionUID = -5798851637961914550L;
+    private static final long serialVersionUID = -5798851637961914550L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

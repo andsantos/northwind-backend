@@ -22,20 +22,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.andsantos.northwind.exception.BadRequestException;
 import br.com.andsantos.northwind.service.ProdutoService;
 import br.com.andsantos.northwind.service.dto.ProdutoDTO;
-import br.com.andsantos.northwind.services.errors.BadRequestException;
 
 @RestController
 @RequestMapping("/api")
 public class ProdutoController {
     private final Logger log = LoggerFactory.getLogger(ProdutoController.class);
 
-	private ProdutoService service;
+    private ProdutoService service;
 
-	public ProdutoController(ProdutoService produtoService) {
-		this.service = produtoService;
-	}
+    public ProdutoController(ProdutoService produtoService) {
+        this.service = produtoService;
+    }
 
     @GetMapping("/produtos")
     public ResponseEntity<List<ProdutoDTO>> listar(Pageable pageable,
@@ -53,34 +53,31 @@ public class ProdutoController {
     }
 
     @PostMapping("/produtos")
-    public ResponseEntity<ProdutoDTO> salvar(@Valid @RequestBody ProdutoDTO dto)
-    		throws URISyntaxException {
+    public ResponseEntity<ProdutoDTO> salvar(
+            @Valid @RequestBody ProdutoDTO dto) throws URISyntaxException {
         log.debug("Gravando Produto {} ", dto);
         ProdutoDTO result = service.salvar(dto);
         return ResponseEntity
-        		.created(new URI("/produtos/" + result.getId()))
-        		.body(result);
+                .created(new URI("/produtos/" + result.getId())).body(result);
     }
 
     @PutMapping("/produtos/{id}")
     public ResponseEntity<ProdutoDTO> atualizar(
-    		@PathVariable(value = "id", required = false) final Long id,
-    		@Valid @RequestBody ProdutoDTO dto) 
-    		throws URISyntaxException {
+            @PathVariable(value = "id", required = false) final Long id,
+            @Valid @RequestBody ProdutoDTO dto) throws URISyntaxException {
         log.debug("Atualizando Produto {} ", dto);
 
         if (dto.getId() == null || dto.getId() == 0) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         if (!Objects.equals(id, dto.getId())) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         ProdutoDTO result = service.atualizar(dto);
         return ResponseEntity
-        		.created(new URI("/produtos/" + result.getId()))
-        		.body(result);
+                .created(new URI("/produtos/" + result.getId())).body(result);
     }
 
     @DeleteMapping("/produtos/{id}")

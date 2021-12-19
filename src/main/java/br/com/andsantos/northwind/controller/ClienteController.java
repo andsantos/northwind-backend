@@ -22,20 +22,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.andsantos.northwind.exception.BadRequestException;
 import br.com.andsantos.northwind.service.ClienteService;
 import br.com.andsantos.northwind.service.dto.ClienteDTO;
-import br.com.andsantos.northwind.services.errors.BadRequestException;
 
 @RestController
 @RequestMapping("/api")
 public class ClienteController {
     private final Logger log = LoggerFactory.getLogger(ClienteController.class);
 
-	private ClienteService service;
+    private ClienteService service;
 
-	public ClienteController(ClienteService clienteService) {
-		this.service = clienteService;
-	}
+    public ClienteController(ClienteService clienteService) {
+        this.service = clienteService;
+    }
 
     @GetMapping("/clientes")
     public ResponseEntity<List<ClienteDTO>> listar(Pageable pageable,
@@ -54,33 +54,30 @@ public class ClienteController {
 
     @PostMapping("/clientes")
     public ResponseEntity<ClienteDTO> salvar(@Valid @RequestBody ClienteDTO dto)
-    		throws URISyntaxException {
+            throws URISyntaxException {
         log.debug("Gravando cliente {} ", dto);
         ClienteDTO result = service.salvar(dto);
         return ResponseEntity
-        		.created(new URI("/clientes/" + result.getId()))
-        		.body(result);
+                .created(new URI("/clientes/" + result.getId())).body(result);
     }
 
     @PutMapping("/clientes/{id}")
     public ResponseEntity<ClienteDTO> atualizar(
-    		@PathVariable(value = "id", required = false) final Long id,
-    		@Valid @RequestBody ClienteDTO dto) 
-    		throws URISyntaxException {
+            @PathVariable(value = "id", required = false) final Long id,
+            @Valid @RequestBody ClienteDTO dto) throws URISyntaxException {
         log.debug("Atualizando Cliente {} ", dto);
 
         if (dto.getId() == null || dto.getId() == 0) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         if (!Objects.equals(id, dto.getId())) {
-        	throw new BadRequestException("Requisição inválida.");
+            throw new BadRequestException("Requisição inválida.");
         }
 
         ClienteDTO result = service.atualizar(dto);
         return ResponseEntity
-        		.created(new URI("/clientes/" + result.getId()))
-        		.body(result);
+                .created(new URI("/clientes/" + result.getId())).body(result);
     }
 
     @DeleteMapping("/clientes/{id}")

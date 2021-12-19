@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "suppliers")
 public class Fornecedor implements Serializable {
-	private static final long serialVersionUID = 3337235963129970215L;
+    private static final long serialVersionUID = 3337235963129970215L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

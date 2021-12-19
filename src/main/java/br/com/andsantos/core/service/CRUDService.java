@@ -4,13 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CRUDService<A> {
-	A salvar(A dto);
+    A salvar(A dto);
 
-	A atualizar(A dto);
+    A atualizar(A dto);
 
-	void excluir(Long id);
+    void excluir(Long id);
 
-	A obter(Long id);
+    A obter(Long id);
 
-	Page<A> listar(Pageable pageable);
+    Page<A> listar(Pageable pageable);
 }

@@ -8,16 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.andsantos.northwind.domain.Categoria;
+import br.com.andsantos.northwind.exception.NotFoundException;
+import br.com.andsantos.northwind.exception.ObjectAlreadyExistsException;
 import br.com.andsantos.northwind.repository.CategoriaRepository;
 import br.com.andsantos.northwind.service.CategoriaService;
 import br.com.andsantos.northwind.service.dto.CategoriaDTO;
 import br.com.andsantos.northwind.service.mapper.CategoriaMapper;
-import br.com.andsantos.northwind.services.errors.NotFoundException;
-import br.com.andsantos.northwind.services.errors.ObjectAlreadyExistsException;
 
 @Service
 @Transactional
 public class CategoriaServiceImpl implements CategoriaService {
+    private static final String CATEGORIA_NOT_FOUND = "Categoria não encontrada.";
+
     private final Logger log = LoggerFactory.getLogger(CategoriaServiceImpl.class);
 
     private final CategoriaRepository repository;
@@ -29,7 +31,7 @@ public class CategoriaServiceImpl implements CategoriaService {
         this.mapper = categoriaMapper;
     }
 
-	@Override
+    @Override
 	public CategoriaDTO salvar(CategoriaDTO dto) {
         log.debug("Gravando categoria {} ", dto.getNomeCategoria());
 
@@ -52,7 +54,7 @@ public class CategoriaServiceImpl implements CategoriaService {
                 )
                 .map(repository::save)
                 .map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException("Categoria não encontrada."));
+        		.orElseThrow(() -> new NotFoundException(CATEGORIA_NOT_FOUND));
 	}
 
 	@Override
@@ -61,7 +63,7 @@ public class CategoriaServiceImpl implements CategoriaService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new NotFoundException("Categoria não encontrada.");
+            throw new NotFoundException(CATEGORIA_NOT_FOUND);
         }
 	}
 
@@ -70,7 +72,7 @@ public class CategoriaServiceImpl implements CategoriaService {
         log.debug("Recuperando a categoria com id {}", id);
         return repository.findById(id)
         		.map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException("Categoria não encontrada."));
+        		.orElseThrow(() -> new NotFoundException(CATEGORIA_NOT_FOUND));
 	}
 
 	@Override

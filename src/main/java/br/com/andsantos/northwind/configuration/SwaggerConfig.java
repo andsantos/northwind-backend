@@ -1,5 +1,5 @@
 /**
- * Baseado no código encontrado em 
+ * Baseado no código encontrado em:
  * https://github.com/eugenp/tutorials/blob/master/spring-security-modules/spring-security-web-rest/src/main/java/com/baeldung/swagger2/SwaggerConfig.java
  */
 package br.com.andsantos.northwind.configuration;
@@ -23,7 +23,8 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).select()
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
                 .apis(RequestHandlerSelectors.basePackage("br.com.andsantos.northwind.controller"))
                 .paths(PathSelectors.any())
                 .build()
@@ -33,7 +34,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo("Northwind API", "API de exemplo", "0.0.1", null,
-                new Contact("André Santos", "www.examplo.com", "email@company.com"),
-                "License of API", "API license URL", Collections.emptyList());
+                new Contact("André Santos", "www.exemplo.com", "email@company.com"),
+                "License of API",
+                "API license URL", Collections.emptyList());
     }
 }

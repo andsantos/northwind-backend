@@ -8,16 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.andsantos.northwind.domain.Fornecedor;
+import br.com.andsantos.northwind.exception.NotFoundException;
+import br.com.andsantos.northwind.exception.ObjectAlreadyExistsException;
 import br.com.andsantos.northwind.repository.FornecedorRepository;
 import br.com.andsantos.northwind.service.FornecedorService;
 import br.com.andsantos.northwind.service.dto.FornecedorDTO;
 import br.com.andsantos.northwind.service.mapper.FornecedorMapper;
-import br.com.andsantos.northwind.services.errors.NotFoundException;
-import br.com.andsantos.northwind.services.errors.ObjectAlreadyExistsException;
 
 @Service
 @Transactional
 public class FornecedorServiceImpl implements FornecedorService {
+    private static final String FORNECEDOR_NOT_FOUND = "Fornecedor não encontrado.";
+
     private final Logger log = LoggerFactory.getLogger(FornecedorServiceImpl.class);
 
     private final FornecedorRepository repository;
@@ -53,7 +55,7 @@ public class FornecedorServiceImpl implements FornecedorService {
                 )
                 .map(repository::save)
                 .map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException("Fornecedor não encontrada."));
+        		.orElseThrow(() -> new NotFoundException(FORNECEDOR_NOT_FOUND));
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class FornecedorServiceImpl implements FornecedorService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new NotFoundException("Fornecedor não encontrado.");
+            throw new NotFoundException(FORNECEDOR_NOT_FOUND);
         }
 	}
 
@@ -71,7 +73,7 @@ public class FornecedorServiceImpl implements FornecedorService {
         log.debug("Recuperando a Fornecedor com id {}", id);
         return repository.findById(id)
         		.map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException("Fornecedor não encontrada."));
+        		.orElseThrow(() -> new NotFoundException(FORNECEDOR_NOT_FOUND));
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "order_details")
 public class PedidoDetalhe implements Serializable {
-	private static final long serialVersionUID = 8397380661653769289L;
+    private static final long serialVersionUID = 8397380661653769289L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
