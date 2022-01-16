@@ -32,7 +32,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
-	public CategoriaDTO salvar(CategoriaDTO dto) {
+    public CategoriaDTO salvar(CategoriaDTO dto) {
         log.debug("Gravando categoria {} ", dto.getNomeCategoria());
 
         if (repository.existsByNomeCategoria(dto.getNomeCategoria())) {
@@ -40,7 +40,7 @@ public class CategoriaServiceImpl implements CategoriaService {
         }
         Categoria obj = mapper.toEntity(dto);
         return mapper.toDto(repository.save(obj));
-	}
+    }
 
 	@Override
 	public CategoriaDTO atualizar(CategoriaDTO dto) {
@@ -58,14 +58,14 @@ public class CategoriaServiceImpl implements CategoriaService {
 	}
 
 	@Override
-	public void excluir(Long id) {
+    public void excluir(Long id) {
         log.debug("Excluindo categoria com id {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
             throw new NotFoundException(CATEGORIA_NOT_FOUND);
         }
-	}
+    }
 
 	@Override
 	public CategoriaDTO obter(Long id) {
@@ -82,12 +82,12 @@ public class CategoriaServiceImpl implements CategoriaService {
 	}
 
 	@Override
-	public Page<CategoriaDTO> listar(String nomeCategoria, Pageable pageable) {
+    public Page<CategoriaDTO> listar(String nomeCategoria, Pageable pageable) {
         if (nomeCategoria == null) {
             return listar(pageable);
         } else {
             log.debug("Recuperando todas as categorias contendo {}", nomeCategoria);
             return repository.findAllByNomeCategoriaContaining(nomeCategoria, pageable).map(mapper::toDto);
         }
-	}
+    }
 }
