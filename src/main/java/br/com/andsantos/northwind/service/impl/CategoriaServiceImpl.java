@@ -35,10 +35,10 @@ public class CategoriaServiceImpl implements CategoriaService {
 	public CategoriaDTO salvar(CategoriaDTO dto) {
         log.debug("Gravando categoria {} ", dto.getNomeCategoria());
 
-		if (repository.existsByNomeCategoria(dto.getNomeCategoria())) {
-			throw new ObjectAlreadyExistsException("Categoria já cadastrada.");
-		}
-		Categoria obj = mapper.toEntity(dto);
+        if (repository.existsByNomeCategoria(dto.getNomeCategoria())) {
+            throw new ObjectAlreadyExistsException("Categoria já cadastrada.");
+        }
+        Categoria obj = mapper.toEntity(dto);
         return mapper.toDto(repository.save(obj));
 	}
 
@@ -83,11 +83,11 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 	@Override
 	public Page<CategoriaDTO> listar(String nomeCategoria, Pageable pageable) {
-		if (nomeCategoria == null) {
-			return listar(pageable);
-		} else {
-	        log.debug("Recuperando todas as categorias contendo {}", nomeCategoria);
-	        return repository.findAllByNomeCategoriaContaining(nomeCategoria, pageable).map(mapper::toDto);
-		}
+        if (nomeCategoria == null) {
+            return listar(pageable);
+        } else {
+            log.debug("Recuperando todas as categorias contendo {}", nomeCategoria);
+            return repository.findAllByNomeCategoriaContaining(nomeCategoria, pageable).map(mapper::toDto);
+        }
 	}
 }
