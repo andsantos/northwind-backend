@@ -50,7 +50,7 @@ public class TransportadoraServiceImpl implements TransportadoraService {
                 .map(existingCategory -> {
                     mapper.partialUpdate(existingCategory, dto);
                     return existingCategory;
-                })
+                    })
                 .map(repository::save)
                 .map(mapper::toDto)
                 .orElseThrow(() -> new NotFoundException(TRANSPORTADORA_NOT_FOUND));
@@ -69,16 +69,14 @@ public class TransportadoraServiceImpl implements TransportadoraService {
     @Override
     public TransportadoraDTO obter(Long id) {
         log.debug("Recuperando a Transportadora com id {}", id);
-        return repository.findById(id)
-                .map(mapper::toDto)
+        return repository.findById(id).map(mapper::toDto)
                 .orElseThrow(() -> new NotFoundException(TRANSPORTADORA_NOT_FOUND));
     }
 
     @Override
     public Page<TransportadoraDTO> listar(Pageable pageable) {
         log.debug("Recuperando todas as Transportadoras");
-        return repository.findAll(pageable)
-                .map(mapper::toDto);
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     @Override

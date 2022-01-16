@@ -43,52 +43,46 @@ public class EmpregadoServiceImpl implements EmpregadoService {
         return mapper.toDto(repository.save(obj));
     }
 
-	@Override
-	public EmpregadoDTO atualizar(EmpregadoDTO dto) {
-        return repository
-        		.findById(dto.getId())
-                .map(
-                    existingCategory -> {
-                        mapper.partialUpdate(existingCategory, dto);
-                        return existingCategory;
-                    }
-                )
-                .map(repository::save)
-                .map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException(EMPREGADO_NOT_FOUND));
-	}
+    @Override
+    public EmpregadoDTO atualizar(EmpregadoDTO dto) {
+        return repository.findById(dto.getId()).map(existingCategory -> {
+            mapper.partialUpdate(existingCategory, dto);
+            return existingCategory;
+        }).map(repository::save).map(mapper::toDto)
+                .orElseThrow(() -> new NotFoundException(EMPREGADO_NOT_FOUND));
+    }
 
-	@Override
-	public void excluir(Long id) {
+    @Override
+    public void excluir(Long id) {
         log.debug("Excluindo Empregado com id {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
             throw new NotFoundException(EMPREGADO_NOT_FOUND);
         }
-	}
+    }
 
-	@Override
-	public EmpregadoDTO obter(Long id) {
+    @Override
+    public EmpregadoDTO obter(Long id) {
         log.debug("Recuperando a Empregado com id {}", id);
         return repository.findById(id)
-        		.map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException(EMPREGADO_NOT_FOUND));
-	}
+                .map(mapper::toDto)
+                .orElseThrow(() -> new NotFoundException(EMPREGADO_NOT_FOUND));
+    }
 
-	@Override
-	public Page<EmpregadoDTO> listar(Pageable pageable) {
+    @Override
+    public Page<EmpregadoDTO> listar(Pageable pageable) {
         log.debug("Recuperando todas as Empregados");
         return repository.findAll(pageable).map(mapper::toDto);
-	}
+    }
 
-	@Override
-	public Page<EmpregadoDTO> listar(String nomeEmpregado, Pageable pageable) {
-		if (nomeEmpregado == null) {
-			return listar(pageable);
-		} else {
-	        log.debug("Recuperando todas as Empregados contendo {}", nomeEmpregado);
-	        return repository.findAllByNomeEmpregadoContaining(nomeEmpregado, pageable).map(mapper::toDto);
-		}
-	}
+    @Override
+    public Page<EmpregadoDTO> listar(String nomeEmpregado, Pageable pageable) {
+        if (nomeEmpregado == null) {
+            return listar(pageable);
+        } else {
+            log.debug("Recuperando todas as Empregados contendo {}", nomeEmpregado);
+            return repository.findAllByNomeEmpregadoContaining(nomeEmpregado, pageable).map(mapper::toDto);
+        }
+    }
 }

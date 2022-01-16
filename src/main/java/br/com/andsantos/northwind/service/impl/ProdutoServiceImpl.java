@@ -34,10 +34,8 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     private final ProdutoMapper mapper;
 
-    public ProdutoServiceImpl(ProdutoRepository produtoRepository,
-            CategoriaRepository categoryRepository,
-            FornecedorRepository supplierRepository,
-            ProdutoMapper produtoMapper) {
+    public ProdutoServiceImpl(ProdutoRepository produtoRepository, CategoriaRepository categoryRepository,
+            FornecedorRepository supplierRepository, ProdutoMapper produtoMapper) {
         this.repository = produtoRepository;
         this.mapper = produtoMapper;
         this.categoriaRepository = categoryRepository;
@@ -67,10 +65,13 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ProdutoDTO atualizar(ProdutoDTO dto) {
-        return repository.findById(dto.getId()).map(existingCategory -> {
-            mapper.partialUpdate(existingCategory, dto);
-            return existingCategory;
-        }).map(repository::save).map(mapper::toDto)
+        return repository.findById(dto.getId())
+                .map(existingCategory -> {
+                    mapper.partialUpdate(existingCategory, dto);
+                    return existingCategory;
+                    })
+                .map(repository::save)
+                .map(mapper::toDto)
                 .orElseThrow(() -> new NotFoundException(PRODUTO_NOT_FOUND));
     }
 
@@ -95,8 +96,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public Page<ProdutoDTO> listar(Pageable pageable) {
         log.debug("Recuperando todas as Produtos");
-        return repository.findAll(pageable)
-                .map(mapper::toDto);
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     @Override

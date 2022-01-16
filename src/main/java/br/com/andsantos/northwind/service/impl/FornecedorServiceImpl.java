@@ -31,64 +31,57 @@ public class FornecedorServiceImpl implements FornecedorService {
         this.mapper = fornecedorMapper;
     }
 
-	@Override
-	public FornecedorDTO salvar(FornecedorDTO dto) {
+    @Override
+    public FornecedorDTO salvar(FornecedorDTO dto) {
         log.debug("Gravando Fornecedor {} ", dto.getNomeFornecedor());
 
-		if (repository.existsByNomeFornecedor(dto.getNomeFornecedor())) {
-			throw new ObjectAlreadyExistsException("Fornecedor já cadastrado.");
-		}
+        if (repository.existsByNomeFornecedor(dto.getNomeFornecedor())) {
+            throw new ObjectAlreadyExistsException("Fornecedor já cadastrado.");
+        }
 
-		Fornecedor obj = mapper.toEntity(dto);
+        Fornecedor obj = mapper.toEntity(dto);
         return mapper.toDto(repository.save(obj));
-	}
+    }
 
-	@Override
-	public FornecedorDTO atualizar(FornecedorDTO dto) {
-        return repository
-        		.findById(dto.getId())
-                .map(
-                    existingCategory -> {
-                        mapper.partialUpdate(existingCategory, dto);
-                        return existingCategory;
-                    }
-                )
-                .map(repository::save)
-                .map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException(FORNECEDOR_NOT_FOUND));
-	}
+    @Override
+    public FornecedorDTO atualizar(FornecedorDTO dto) {
+        return repository.findById(dto.getId()).map(existingCategory -> {
+            mapper.partialUpdate(existingCategory, dto);
+            return existingCategory;
+        }).map(repository::save).map(mapper::toDto)
+                .orElseThrow(() -> new NotFoundException(FORNECEDOR_NOT_FOUND));
+    }
 
-	@Override
-	public void excluir(Long id) {
+    @Override
+    public void excluir(Long id) {
         log.debug("Excluindo Fornecedor com id {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
             throw new NotFoundException(FORNECEDOR_NOT_FOUND);
         }
-	}
+    }
 
-	@Override
-	public FornecedorDTO obter(Long id) {
+    @Override
+    public FornecedorDTO obter(Long id) {
         log.debug("Recuperando a Fornecedor com id {}", id);
-        return repository.findById(id)
-        		.map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException(FORNECEDOR_NOT_FOUND));
-	}
+        return repository.findById(id).map(mapper::toDto)
+                .orElseThrow(() -> new NotFoundException(FORNECEDOR_NOT_FOUND));
+    }
 
-	@Override
-	public Page<FornecedorDTO> listar(Pageable pageable) {
+    @Override
+    public Page<FornecedorDTO> listar(Pageable pageable) {
         log.debug("Recuperando todas as Fornecedores");
         return repository.findAll(pageable).map(mapper::toDto);
-	}
+    }
 
-	@Override
-	public Page<FornecedorDTO> listar(String nomeEmpresa, Pageable pageable) {
-		if (nomeEmpresa == null) {
-			return listar(pageable);
-		} else {
-	        log.debug("Recuperando todas as Fornecedores contendo {}", nomeEmpresa);
-	        return repository.findAllByNomeFornecedorContaining(nomeEmpresa, pageable).map(mapper::toDto);
-		}
-	}
+    @Override
+    public Page<FornecedorDTO> listar(String nomeEmpresa, Pageable pageable) {
+        if (nomeEmpresa == null) {
+            return listar(pageable);
+        } else {
+            log.debug("Recuperando todas as Fornecedores contendo {}", nomeEmpresa);
+            return repository.findAllByNomeFornecedorContaining(nomeEmpresa, pageable).map(mapper::toDto);
+        }
+    }
 }
