@@ -26,7 +26,8 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     private final CategoriaMapper mapper;
 
-    public CategoriaServiceImpl(CategoriaRepository categoriaRepository, CategoriaMapper categoriaMapper) {
+    public CategoriaServiceImpl(CategoriaRepository categoriaRepository,
+            CategoriaMapper categoriaMapper) {
         this.repository = categoriaRepository;
         this.mapper = categoriaMapper;
     }
@@ -42,22 +43,19 @@ public class CategoriaServiceImpl implements CategoriaService {
         return mapper.toDto(repository.save(obj));
     }
 
-	@Override
-	public CategoriaDTO atualizar(CategoriaDTO dto) {
+    @Override
+    public CategoriaDTO atualizar(CategoriaDTO dto) {
         return repository
-        		.findById(dto.getId())
-                .map(
-                    existingCategory -> {
-                        mapper.partialUpdate(existingCategory, dto);
-                        return existingCategory;
-                    }
-                )
+                .findById(dto.getId())
+                .map(existingCategory -> {
+                    mapper.partialUpdate(existingCategory, dto);
+                    return existingCategory;})
                 .map(repository::save)
                 .map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException(CATEGORIA_NOT_FOUND));
-	}
+                .orElseThrow(() -> new NotFoundException(CATEGORIA_NOT_FOUND));
+    }
 
-	@Override
+    @Override
     public void excluir(Long id) {
         log.debug("Excluindo categoria com id {}", id);
         if (repository.existsById(id)) {
@@ -67,27 +65,29 @@ public class CategoriaServiceImpl implements CategoriaService {
         }
     }
 
-	@Override
-	public CategoriaDTO obter(Long id) {
+    @Override
+    public CategoriaDTO obter(Long id) {
         log.debug("Recuperando a categoria com id {}", id);
-        return repository.findById(id)
-        		.map(mapper::toDto)
-        		.orElseThrow(() -> new NotFoundException(CATEGORIA_NOT_FOUND));
-	}
+        return repository
+                .findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new NotFoundException(CATEGORIA_NOT_FOUND));
+    }
 
-	@Override
-	public Page<CategoriaDTO> listar(Pageable pageable) {
+    @Override
+    public Page<CategoriaDTO> listar(Pageable pageable) {
         log.debug("Recuperando todas as categorias");
         return repository.findAll(pageable).map(mapper::toDto);
-	}
+    }
 
-	@Override
+    @Override
     public Page<CategoriaDTO> listar(String nomeCategoria, Pageable pageable) {
         if (nomeCategoria == null) {
             return listar(pageable);
         } else {
             log.debug("Recuperando todas as categorias contendo {}", nomeCategoria);
-            return repository.findAllByNomeCategoriaContaining(nomeCategoria, pageable).map(mapper::toDto);
+            return repository.findAllByNomeCategoriaContaining(nomeCategoria, pageable)
+                    .map(mapper::toDto);
         }
     }
 }
