@@ -36,7 +36,7 @@ public class EmpregadoServiceImpl implements EmpregadoService {
         log.debug("Gravando Empregado {} ", dto.getNomeEmpregado());
 
         if (repository.existsByNomeEmpregado(dto.getNomeEmpregado())) {
-            throw new ObjectAlreadyExistsException("Empregado já cadastrada.");
+            throw new ObjectAlreadyExistsException("Empregado já cadastrado.");
         }
 
         Empregado obj = mapper.toEntity(dto);

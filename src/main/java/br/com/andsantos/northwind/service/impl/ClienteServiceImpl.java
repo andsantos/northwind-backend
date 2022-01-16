@@ -36,7 +36,7 @@ public class ClienteServiceImpl implements ClienteService {
 		log.debug("Gravando Cliente {} ", dto.getNomeEmpresa());
 
 		if (repository.existsByNomeEmpresa(dto.getNomeEmpresa())) {
-			throw new ObjectAlreadyExistsException("Cliente já cadastrada.");
+			throw new ObjectAlreadyExistsException("Cliente já cadastrado.");
 		}
 
 		Cliente obj = mapper.toEntity(dto);

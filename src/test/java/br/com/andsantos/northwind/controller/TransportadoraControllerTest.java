@@ -76,6 +76,20 @@ public class TransportadoraControllerTest {
 
     @Test
     @Transactional
+    void salvarCategoriaRepetida() throws Exception {
+        repository.save(criarTransportadora());
+
+        TransportadoraDTO dto = mapper.toDto(criarTransportadora());
+
+        mockMvc
+            .perform(post(ENTITY_API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional
     void listarTransportadoras() throws Exception {
         Transportadora obj = repository.save(criarTransportadora());
 
@@ -83,9 +97,9 @@ public class TransportadoraControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeTransportadora").value(hasItem(NOME_TRANSPORTADORA)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeTransportadora").value(hasItem(NOME_TRANSPORTADORA)))
+            .andExpect(jsonPath("$.results[*].telefone").value(hasItem(TELEFONE)));
     }
 
     @Test
@@ -97,9 +111,9 @@ public class TransportadoraControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc&nome=A"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeTransportadora").value(hasItem(NOME_TRANSPORTADORA)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeTransportadora").value(hasItem(NOME_TRANSPORTADORA)))
+            .andExpect(jsonPath("$.results[*].telefone").value(hasItem(TELEFONE)));
     }
 
     @Test
@@ -137,6 +151,22 @@ public class TransportadoraControllerTest {
 
         List<Transportadora> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao - 1);
+    }
+
+    @Test
+    @Transactional
+    void excluirNaoExistente() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL_ID, 0))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    void excluirSemId() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL))
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test

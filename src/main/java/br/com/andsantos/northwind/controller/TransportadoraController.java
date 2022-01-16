@@ -2,7 +2,6 @@ package br.com.andsantos.northwind.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -25,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.andsantos.northwind.exception.BadRequestException;
 import br.com.andsantos.northwind.service.TransportadoraService;
 import br.com.andsantos.northwind.service.dto.TransportadoraDTO;
+import br.com.andsantos.northwind.util.Pagina;
+import br.com.andsantos.northwind.util.PaginationUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -38,11 +39,11 @@ public class TransportadoraController {
     }
 
     @GetMapping("/transportadoras")
-    public ResponseEntity<List<TransportadoraDTO>> listar(Pageable pageable,
+    public ResponseEntity<Pagina<TransportadoraDTO>> listar(Pageable pageable,
             @RequestParam(required = false) String nome) {
         log.debug("Recuperando todas as transportadoras");
         Page<TransportadoraDTO> page = service.listar(nome, pageable);
-        return ResponseEntity.ok().body(page.getContent());
+        return ResponseEntity.ok().body(PaginationUtil.paginar(page));
     }
 
     @GetMapping("/transportadoras/{id}")
@@ -68,7 +69,7 @@ public class TransportadoraController {
             @Valid @RequestBody TransportadoraDTO dto) throws URISyntaxException {
         log.debug("Atualizando transportadora {} ", dto);
 
-        if (dto.getId() == null || dto.getId() == 0) {
+        if (dto.getId() == null) {
             throw new BadRequestException("Requisição inválida.");
         }
 

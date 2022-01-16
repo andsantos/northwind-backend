@@ -8,5 +8,5 @@ import br.com.andsantos.northwind.service.dto.FornecedorDTO;
 
 public interface FornecedorService extends CRUDService<FornecedorDTO> {
 
-	Page<FornecedorDTO> listar(String nomeFornecedor, Pageable pageable);
+    Page<FornecedorDTO> listar(String nomeFornecedor, Pageable pageable);
 }

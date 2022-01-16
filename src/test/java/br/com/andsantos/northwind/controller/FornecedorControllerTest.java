@@ -112,6 +112,20 @@ public class FornecedorControllerTest {
 
     @Test
     @Transactional
+    void salvarCategoriaRepetida() throws Exception {
+        repository.save(criarFornecedor());
+
+        FornecedorDTO dto = mapper.toDto(criarFornecedor());
+
+        mockMvc
+            .perform(post(ENTITY_API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional
     void listarFornecedores() throws Exception {
         Fornecedor obj = repository.save(criarFornecedor());
 
@@ -119,18 +133,18 @@ public class FornecedorControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeFornecedor").value(hasItem(NOME_FORNECEDOR)))
-            .andExpect(jsonPath("$.[*].nomeContato").value(hasItem(NOME_CONTATO)))
-            .andExpect(jsonPath("$.[*].titulo").value(hasItem(TITULO)))
-            .andExpect(jsonPath("$.[*].endereco").value(hasItem(ENDERECO)))
-            .andExpect(jsonPath("$.[*].cidade").value(hasItem(CIDADE)))
-            .andExpect(jsonPath("$.[*].regiao").value(hasItem(REGIAO)))
-            .andExpect(jsonPath("$.[*].numeroCEP").value(hasItem(NUMERO_CEP)))
-            .andExpect(jsonPath("$.[*].siglaPais").value(hasItem(SIGLA_PAIS)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)))
-            .andExpect(jsonPath("$.[*].fax").value(hasItem(FAX)))
-            .andExpect(jsonPath("$.[*].homePage").value(hasItem(HOMEPAGE)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeFornecedor").value(hasItem(NOME_FORNECEDOR)))
+            .andExpect(jsonPath("$.results[*].nomeContato").value(hasItem(NOME_CONTATO)))
+            .andExpect(jsonPath("$.results[*].titulo").value(hasItem(TITULO)))
+            .andExpect(jsonPath("$.results[*].endereco").value(hasItem(ENDERECO)))
+            .andExpect(jsonPath("$.results[*].cidade").value(hasItem(CIDADE)))
+            .andExpect(jsonPath("$.results[*].regiao").value(hasItem(REGIAO)))
+            .andExpect(jsonPath("$.results[*].numeroCEP").value(hasItem(NUMERO_CEP)))
+            .andExpect(jsonPath("$.results[*].siglaPais").value(hasItem(SIGLA_PAIS)))
+            .andExpect(jsonPath("$.results[*].telefone").value(hasItem(TELEFONE)))
+            .andExpect(jsonPath("$.results[*].fax").value(hasItem(FAX)))
+            .andExpect(jsonPath("$.results[*].homePage").value(hasItem(HOMEPAGE)));
     }
 
     @Test
@@ -142,18 +156,18 @@ public class FornecedorControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc&nome=A"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeFornecedor").value(hasItem(NOME_FORNECEDOR)))
-            .andExpect(jsonPath("$.[*].nomeContato").value(hasItem(NOME_CONTATO)))
-            .andExpect(jsonPath("$.[*].titulo").value(hasItem(TITULO)))
-            .andExpect(jsonPath("$.[*].endereco").value(hasItem(ENDERECO)))
-            .andExpect(jsonPath("$.[*].cidade").value(hasItem(CIDADE)))
-            .andExpect(jsonPath("$.[*].regiao").value(hasItem(REGIAO)))
-            .andExpect(jsonPath("$.[*].numeroCEP").value(hasItem(NUMERO_CEP)))
-            .andExpect(jsonPath("$.[*].siglaPais").value(hasItem(SIGLA_PAIS)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)))
-            .andExpect(jsonPath("$.[*].fax").value(hasItem(FAX)))
-            .andExpect(jsonPath("$.[*].homePage").value(hasItem(HOMEPAGE)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeFornecedor").value(hasItem(NOME_FORNECEDOR)))
+            .andExpect(jsonPath("$.results[*].nomeContato").value(hasItem(NOME_CONTATO)))
+            .andExpect(jsonPath("$.results[*].titulo").value(hasItem(TITULO)))
+            .andExpect(jsonPath("$.results[*].endereco").value(hasItem(ENDERECO)))
+            .andExpect(jsonPath("$.results[*].cidade").value(hasItem(CIDADE)))
+            .andExpect(jsonPath("$.results[*].regiao").value(hasItem(REGIAO)))
+            .andExpect(jsonPath("$.results[*].numeroCEP").value(hasItem(NUMERO_CEP)))
+            .andExpect(jsonPath("$.results[*].siglaPais").value(hasItem(SIGLA_PAIS)))
+            .andExpect(jsonPath("$.results[*].telefone").value(hasItem(TELEFONE)))
+            .andExpect(jsonPath("$.results[*].fax").value(hasItem(FAX)))
+            .andExpect(jsonPath("$.results[*].homePage").value(hasItem(HOMEPAGE)));
     }
 
     @Test
@@ -199,6 +213,22 @@ public class FornecedorControllerTest {
 
         List<Fornecedor> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao - 1);
+    }
+
+    @Test
+    @Transactional
+    void excluirNaoExistente() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL_ID, 0))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    void excluirSemId() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL))
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test

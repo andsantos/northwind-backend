@@ -9,7 +9,7 @@ import br.com.andsantos.northwind.domain.Fornecedor;
 
 @Repository
 public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
-	boolean existsByNomeFornecedor(String nomeFornecedor);
+    boolean existsByNomeFornecedor(String nomeFornecedor);
 
-	Page<Fornecedor> findAllByNomeFornecedorContaining(String nomeFornecedor, Pageable pageable);
+    Page<Fornecedor> findAllByNomeFornecedorContaining(String nomeFornecedor, Pageable pageable);
 }

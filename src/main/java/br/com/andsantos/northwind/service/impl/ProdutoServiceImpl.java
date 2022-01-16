@@ -35,13 +35,13 @@ public class ProdutoServiceImpl implements ProdutoService {
     private final ProdutoMapper mapper;
 
     public ProdutoServiceImpl(ProdutoRepository produtoRepository,
-            CategoriaRepository categoriaRepository,
-            FornecedorRepository fornecedorRepository,
+            CategoriaRepository categoryRepository,
+            FornecedorRepository supplierRepository,
             ProdutoMapper produtoMapper) {
         this.repository = produtoRepository;
         this.mapper = produtoMapper;
-        this.categoriaRepository = categoriaRepository;
-        this.fornecedorRepository = fornecedorRepository;
+        this.categoriaRepository = categoryRepository;
+        this.fornecedorRepository = supplierRepository;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ProdutoServiceImpl implements ProdutoService {
         log.debug("Gravando Produto {} ", dto.getNomeProduto());
 
         if (repository.existsByNomeProduto(dto.getNomeProduto())) {
-            throw new ObjectAlreadyExistsException("Produto já cadastrada.");
+            throw new ObjectAlreadyExistsException("Produto já cadastrado.");
         }
 
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())

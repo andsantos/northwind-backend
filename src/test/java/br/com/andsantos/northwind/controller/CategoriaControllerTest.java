@@ -80,6 +80,20 @@ public class CategoriaControllerTest {
 
     @Test
     @Transactional
+    void salvarCategoriaRepetida() throws Exception {
+        repository.save(criarCategoria());
+
+        CategoriaDTO dto = mapper.toDto(criarCategoria());
+
+        mockMvc
+            .perform(post(ENTITY_API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional
     void listarCategorias() throws Exception {
         Categoria obj = repository.save(criarCategoria());
 
@@ -87,10 +101,10 @@ public class CategoriaControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeCategoria").value(hasItem(PADRAO_NOME_CATEGORIA)))
-            .andExpect(jsonPath("$.[*].descricao").value(hasItem(PADRAO_DESCRICAO)))
-            .andExpect(jsonPath("$.[*].imagem").value(hasItem(PADRAO_IMAGEM)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeCategoria").value(hasItem(PADRAO_NOME_CATEGORIA)))
+            .andExpect(jsonPath("$.results[*].descricao").value(hasItem(PADRAO_DESCRICAO)))
+            .andExpect(jsonPath("$.results[*].imagem").value(hasItem(PADRAO_IMAGEM)));
     }
 
     @Test
@@ -102,10 +116,33 @@ public class CategoriaControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc&nome=A"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeCategoria").value(hasItem(PADRAO_NOME_CATEGORIA)))
-            .andExpect(jsonPath("$.[*].descricao").value(hasItem(PADRAO_DESCRICAO)))
-            .andExpect(jsonPath("$.[*].imagem").value(hasItem(PADRAO_IMAGEM)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeCategoria").value(hasItem(PADRAO_NOME_CATEGORIA)))
+            .andExpect(jsonPath("$.results[*].descricao").value(hasItem(PADRAO_DESCRICAO)))
+            .andExpect(jsonPath("$.results[*].imagem").value(hasItem(PADRAO_IMAGEM)));
+    }
+
+    @Test
+    @Transactional
+    void listarCategoriasPaginadas() throws Exception {
+        var cat = new Categoria();
+        cat.setNomeCategoria("Livros");
+        repository.save(cat);
+
+        Categoria obj = repository.save(criarCategoria());
+
+        var novaCat = new Categoria();
+        novaCat.setNomeCategoria("Jogos");
+        repository.save(novaCat);
+
+        mockMvc
+            .perform(get(ENTITY_API_URL + "?page=1&size=1"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeCategoria").value(hasItem(PADRAO_NOME_CATEGORIA)))
+            .andExpect(jsonPath("$.results[*].descricao").value(hasItem(PADRAO_DESCRICAO)))
+            .andExpect(jsonPath("$.results[*].imagem").value(hasItem(PADRAO_IMAGEM)));
     }
 
     @Test
@@ -144,6 +181,22 @@ public class CategoriaControllerTest {
 
         List<Categoria> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao - 1);
+    }
+
+    @Test
+    @Transactional
+    void excluirNaoExistente() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL_ID, 0))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    void excluirSemId() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL))
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
@@ -228,7 +281,9 @@ public class CategoriaControllerTest {
         CategoriaDTO dto = mapper.toDto(obj);
 
         mockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto)))
+            .perform(put(ENTITY_API_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(dto)))
             .andExpect(status().isMethodNotAllowed());
 
         List<Categoria> lista = repository.findAll();

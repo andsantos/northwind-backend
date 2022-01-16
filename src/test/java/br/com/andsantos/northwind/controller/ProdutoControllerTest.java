@@ -148,6 +148,20 @@ public class ProdutoControllerTest {
 
     @Test
     @Transactional
+    void salvarCategoriaRepetida() throws Exception {
+        repository.save(criarProduto());
+
+        ProdutoDTO dto = mapper.toDto(criarProduto());
+
+        mockMvc
+            .perform(post(ENTITY_API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional
     void listarProdutos() throws Exception {
         Produto obj = repository.save(criarProduto());
 
@@ -155,14 +169,14 @@ public class ProdutoControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].fornecedorId").value(hasItem(obj.getFornecedor().getId().intValue())))
-            .andExpect(jsonPath("$.[*].categoriaId").value(hasItem(obj.getCategoria().getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeProduto").value(hasItem(NOME_PRODUTO)))
-            .andExpect(jsonPath("$.[*].quantidadePorUnidade").value(hasItem(QUANTIDADE_POR_UNIDADE)))
-            .andExpect(jsonPath("$.[*].precoUnitario").value(hasItem(PRECO_UNITARIO_STRING)))
-            .andExpect(jsonPath("$.[*].unidadesEmEstoque").value(hasItem(UNIDADES_EM_ESTOQUE.intValue())))
-            .andExpect(jsonPath("$.[*].descontinuado").value(hasItem(DESCONTINUADO)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].fornecedorId").value(hasItem(obj.getFornecedor().getId().intValue())))
+            .andExpect(jsonPath("$.results[*].categoriaId").value(hasItem(obj.getCategoria().getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeProduto").value(hasItem(NOME_PRODUTO)))
+            .andExpect(jsonPath("$.results[*].quantidadePorUnidade").value(hasItem(QUANTIDADE_POR_UNIDADE)))
+            .andExpect(jsonPath("$.results[*].precoUnitario").value(hasItem(PRECO_UNITARIO_STRING)))
+            .andExpect(jsonPath("$.results[*].unidadesEmEstoque").value(hasItem(UNIDADES_EM_ESTOQUE.intValue())))
+            .andExpect(jsonPath("$.results[*].descontinuado").value(hasItem(DESCONTINUADO)));
     }
 
     @Test
@@ -174,14 +188,14 @@ public class ProdutoControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc&nome=A"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].fornecedorId").value(hasItem(obj.getFornecedor().getId().intValue())))
-            .andExpect(jsonPath("$.[*].categoriaId").value(hasItem(obj.getCategoria().getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeProduto").value(hasItem(NOME_PRODUTO)))
-            .andExpect(jsonPath("$.[*].quantidadePorUnidade").value(hasItem(QUANTIDADE_POR_UNIDADE)))
-            .andExpect(jsonPath("$.[*].precoUnitario").value(hasItem(PRECO_UNITARIO_STRING)))
-            .andExpect(jsonPath("$.[*].unidadesEmEstoque").value(hasItem(UNIDADES_EM_ESTOQUE.intValue())))
-            .andExpect(jsonPath("$.[*].descontinuado").value(hasItem(DESCONTINUADO)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].fornecedorId").value(hasItem(obj.getFornecedor().getId().intValue())))
+            .andExpect(jsonPath("$.results[*].categoriaId").value(hasItem(obj.getCategoria().getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeProduto").value(hasItem(NOME_PRODUTO)))
+            .andExpect(jsonPath("$.results[*].quantidadePorUnidade").value(hasItem(QUANTIDADE_POR_UNIDADE)))
+            .andExpect(jsonPath("$.results[*].precoUnitario").value(hasItem(PRECO_UNITARIO_STRING)))
+            .andExpect(jsonPath("$.results[*].unidadesEmEstoque").value(hasItem(UNIDADES_EM_ESTOQUE.intValue())))
+            .andExpect(jsonPath("$.results[*].descontinuado").value(hasItem(DESCONTINUADO)));
     }
 
     @Test
@@ -224,6 +238,22 @@ public class ProdutoControllerTest {
 
         List<Produto> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao - 1);
+    }
+
+    @Test
+    @Transactional
+    void excluirNaoExistente() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL_ID, 0))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    void excluirSemId() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL))
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test

@@ -36,7 +36,7 @@ public class FornecedorServiceImpl implements FornecedorService {
         log.debug("Gravando Fornecedor {} ", dto.getNomeFornecedor());
 
 		if (repository.existsByNomeFornecedor(dto.getNomeFornecedor())) {
-			throw new ObjectAlreadyExistsException("Fornecedor já cadastrada.");
+			throw new ObjectAlreadyExistsException("Fornecedor já cadastrado.");
 		}
 
 		Fornecedor obj = mapper.toEntity(dto);

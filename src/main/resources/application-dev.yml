@@ -30,6 +30,9 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
+  jackson:
+    default-property-inclusion: non_null
+
 logging:
   level:
     ROOT: INFO

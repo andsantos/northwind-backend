@@ -108,6 +108,20 @@ public class ClienteControllerTest {
 
     @Test
     @Transactional
+    void salvarCategoriaRepetida() throws Exception {
+        repository.save(criarCliente());
+
+        ClienteDTO dto = mapper.toDto(criarCliente());
+
+        mockMvc
+            .perform(post(ENTITY_API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional
     void listarClientes() throws Exception {
         Cliente obj = repository.save(criarCliente());
 
@@ -115,17 +129,17 @@ public class ClienteControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeEmpresa").value(hasItem(NOME_EMPRESA)))
-            .andExpect(jsonPath("$.[*].nomeContato").value(hasItem(NOME_CONTATO)))
-            .andExpect(jsonPath("$.[*].tituloContato").value(hasItem(TITULO_CONTATO)))
-            .andExpect(jsonPath("$.[*].endereco").value(hasItem(ENDERECO)))
-            .andExpect(jsonPath("$.[*].cidade").value(hasItem(CIDADE)))
-            .andExpect(jsonPath("$.[*].regiao").value(hasItem(REGIAO)))
-            .andExpect(jsonPath("$.[*].numeroCEP").value(hasItem(NUMEROCEP)))
-            .andExpect(jsonPath("$.[*].pais").value(hasItem(PAIS)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)))
-            .andExpect(jsonPath("$.[*].fax").value(hasItem(FAX)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeEmpresa").value(hasItem(NOME_EMPRESA)))
+            .andExpect(jsonPath("$.results[*].nomeContato").value(hasItem(NOME_CONTATO)))
+            .andExpect(jsonPath("$.results[*].tituloContato").value(hasItem(TITULO_CONTATO)))
+            .andExpect(jsonPath("$.results[*].endereco").value(hasItem(ENDERECO)))
+            .andExpect(jsonPath("$.results[*].cidade").value(hasItem(CIDADE)))
+            .andExpect(jsonPath("$.results[*].regiao").value(hasItem(REGIAO)))
+            .andExpect(jsonPath("$.results[*].numeroCEP").value(hasItem(NUMEROCEP)))
+            .andExpect(jsonPath("$.results[*].pais").value(hasItem(PAIS)))
+            .andExpect(jsonPath("$.results[*].telefone").value(hasItem(TELEFONE)))
+            .andExpect(jsonPath("$.results[*].fax").value(hasItem(FAX)));
     }
 
     @Test
@@ -137,17 +151,17 @@ public class ClienteControllerTest {
             .perform(get(ENTITY_API_URL + "?sort=id,desc&nome=A"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeEmpresa").value(hasItem(NOME_EMPRESA)))
-            .andExpect(jsonPath("$.[*].nomeContato").value(hasItem(NOME_CONTATO)))
-            .andExpect(jsonPath("$.[*].tituloContato").value(hasItem(TITULO_CONTATO)))
-            .andExpect(jsonPath("$.[*].endereco").value(hasItem(ENDERECO)))
-            .andExpect(jsonPath("$.[*].cidade").value(hasItem(CIDADE)))
-            .andExpect(jsonPath("$.[*].regiao").value(hasItem(REGIAO)))
-            .andExpect(jsonPath("$.[*].numeroCEP").value(hasItem(NUMEROCEP)))
-            .andExpect(jsonPath("$.[*].pais").value(hasItem(PAIS)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)))
-            .andExpect(jsonPath("$.[*].fax").value(hasItem(FAX)));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].nomeEmpresa").value(hasItem(NOME_EMPRESA)))
+            .andExpect(jsonPath("$.results[*].nomeContato").value(hasItem(NOME_CONTATO)))
+            .andExpect(jsonPath("$.results[*].tituloContato").value(hasItem(TITULO_CONTATO)))
+            .andExpect(jsonPath("$.results[*].endereco").value(hasItem(ENDERECO)))
+            .andExpect(jsonPath("$.results[*].cidade").value(hasItem(CIDADE)))
+            .andExpect(jsonPath("$.results[*].regiao").value(hasItem(REGIAO)))
+            .andExpect(jsonPath("$.results[*].numeroCEP").value(hasItem(NUMEROCEP)))
+            .andExpect(jsonPath("$.results[*].pais").value(hasItem(PAIS)))
+            .andExpect(jsonPath("$.results[*].telefone").value(hasItem(TELEFONE)))
+            .andExpect(jsonPath("$.results[*].fax").value(hasItem(FAX)));
     }
 
     @Test
@@ -193,6 +207,22 @@ public class ClienteControllerTest {
 
         List<Cliente> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao - 1);
+    }
+
+    @Test
+    @Transactional
+    void excluirNaoExistente() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL_ID, 0))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    void excluirSemId() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL))
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test

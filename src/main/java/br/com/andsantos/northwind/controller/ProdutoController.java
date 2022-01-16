@@ -2,7 +2,6 @@ package br.com.andsantos.northwind.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -25,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.andsantos.northwind.exception.BadRequestException;
 import br.com.andsantos.northwind.service.ProdutoService;
 import br.com.andsantos.northwind.service.dto.ProdutoDTO;
+import br.com.andsantos.northwind.util.Pagina;
+import br.com.andsantos.northwind.util.PaginationUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -38,11 +39,11 @@ public class ProdutoController {
     }
 
     @GetMapping("/produtos")
-    public ResponseEntity<List<ProdutoDTO>> listar(Pageable pageable,
+    public ResponseEntity<Pagina<ProdutoDTO>> listar(Pageable pageable,
             @RequestParam(required = false) String nome) {
         log.debug("Recuperando todos os produtos");
         Page<ProdutoDTO> page = service.listar(nome, pageable);
-        return ResponseEntity.ok().body(page.getContent());
+        return ResponseEntity.ok().body(PaginationUtil.paginar(page));
     }
 
     @GetMapping("/produtos/{id}")
@@ -67,7 +68,7 @@ public class ProdutoController {
             @Valid @RequestBody ProdutoDTO dto) throws URISyntaxException {
         log.debug("Atualizando Produto {} ", dto);
 
-        if (dto.getId() == null || dto.getId() == 0) {
+        if (dto.getId() == null) {
             throw new BadRequestException("Requisição inválida.");
         }
 

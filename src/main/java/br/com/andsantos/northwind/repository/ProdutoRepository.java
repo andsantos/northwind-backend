@@ -9,7 +9,7 @@ import br.com.andsantos.northwind.domain.Produto;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
-	boolean existsByNomeProduto(String nomeProduto);
+    boolean existsByNomeProduto(String nomeProduto);
 
-	Page<Produto> findAllByNomeProdutoContaining(String nomeProduto, Pageable pageable);
+    Page<Produto> findAllByNomeProdutoContaining(String nomeProduto, Pageable pageable);
 }

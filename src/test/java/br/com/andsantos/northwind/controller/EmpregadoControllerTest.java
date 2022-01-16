@@ -135,29 +135,43 @@ public class EmpregadoControllerTest {
 
     @Test
     @Transactional
+    void salvarCategoriaRepetida() throws Exception {
+        repository.save(criarEmpregado());
+
+        EmpregadoDTO dto = mapper.toDto(criarEmpregado());
+
+        mockMvc
+            .perform(post(ENTITY_API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional
     void listarEmpregados() throws Exception {
         Empregado obj = repository.save(criarEmpregado());
 
         mockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].sobrenome").value(hasItem(SOBRENOME)))
-            .andExpect(jsonPath("$.[*].nomeEmpregado").value(hasItem(NOME_EMPREGADO)))
-            .andExpect(jsonPath("$.[*].titulo").value(hasItem(TITULO)))
-            .andExpect(jsonPath("$.[*].tituloDeCortesia").value(hasItem(TITULO_DE_CORTESIA)))
-            .andExpect(jsonPath("$.[*].dataNascimento").value(hasItem(DATA_NASCIMENTO_STRING)))
-            .andExpect(jsonPath("$.[*].dataAdmissao").value(hasItem(DATA_ADMISSAO_STRING)))
-            .andExpect(jsonPath("$.[*].endereco").value(hasItem(ENDERECO)))
-            .andExpect(jsonPath("$.[*].cidade").value(hasItem(CIDADE)))
-            .andExpect(jsonPath("$.[*].regiao").value(hasItem(REGIAO)))
-            .andExpect(jsonPath("$.[*].numeroCEP").value(hasItem(NUMERO_CEP)))
-            .andExpect(jsonPath("$.[*].siglaPais").value(hasItem(SIGLA_PAIS)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)))
-            .andExpect(jsonPath("$.[*].ramal").value(hasItem(RAMAL)))
-            .andExpect(jsonPath("$.[*].foto").value(hasItem(FOTO)))
-            .andExpect(jsonPath("$.[*].comentario").value(hasItem(COMENTARIO)))
-            .andExpect(jsonPath("$.[*].supervisor").value(hasItem(SUPERVISOR.intValue())));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].sobrenome").value(hasItem(SOBRENOME)))
+            .andExpect(jsonPath("$.results[*].nomeEmpregado").value(hasItem(NOME_EMPREGADO)))
+            .andExpect(jsonPath("$.results[*].titulo").value(hasItem(TITULO)))
+            .andExpect(jsonPath("$.results[*].tituloDeCortesia").value(hasItem(TITULO_DE_CORTESIA)))
+            .andExpect(jsonPath("$.results[*].dataNascimento").value(hasItem(DATA_NASCIMENTO_STRING)))
+            .andExpect(jsonPath("$.results[*].dataAdmissao").value(hasItem(DATA_ADMISSAO_STRING)))
+            .andExpect(jsonPath("$.results[*].endereco").value(hasItem(ENDERECO)))
+            .andExpect(jsonPath("$.results[*].cidade").value(hasItem(CIDADE)))
+            .andExpect(jsonPath("$.results[*].regiao").value(hasItem(REGIAO)))
+            .andExpect(jsonPath("$.results[*].numeroCEP").value(hasItem(NUMERO_CEP)))
+            .andExpect(jsonPath("$.results[*].siglaPais").value(hasItem(SIGLA_PAIS)))
+            .andExpect(jsonPath("$.results[*].telefone").value(hasItem(TELEFONE)))
+            .andExpect(jsonPath("$.results[*].ramal").value(hasItem(RAMAL)))
+            .andExpect(jsonPath("$.results[*].foto").value(hasItem(FOTO)))
+            .andExpect(jsonPath("$.results[*].comentario").value(hasItem(COMENTARIO)))
+            .andExpect(jsonPath("$.results[*].supervisor").value(hasItem(SUPERVISOR.intValue())));
     }
 
     @Test
@@ -168,23 +182,23 @@ public class EmpregadoControllerTest {
         mockMvc
             .perform(get(ENTITY_API_URL + "?sort=id,desc&nome=Q"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obj.getId().intValue())))
-            .andExpect(jsonPath("$.[*].sobrenome").value(hasItem(SOBRENOME)))
-            .andExpect(jsonPath("$.[*].nomeEmpregado").value(hasItem(NOME_EMPREGADO)))
-            .andExpect(jsonPath("$.[*].titulo").value(hasItem(TITULO)))
-            .andExpect(jsonPath("$.[*].tituloDeCortesia").value(hasItem(TITULO_DE_CORTESIA)))
-            .andExpect(jsonPath("$.[*].dataNascimento").value(hasItem(DATA_NASCIMENTO_STRING)))
-            .andExpect(jsonPath("$.[*].dataAdmissao").value(hasItem(DATA_ADMISSAO_STRING)))
-            .andExpect(jsonPath("$.[*].endereco").value(hasItem(ENDERECO)))
-            .andExpect(jsonPath("$.[*].cidade").value(hasItem(CIDADE)))
-            .andExpect(jsonPath("$.[*].regiao").value(hasItem(REGIAO)))
-            .andExpect(jsonPath("$.[*].numeroCEP").value(hasItem(NUMERO_CEP)))
-            .andExpect(jsonPath("$.[*].siglaPais").value(hasItem(SIGLA_PAIS)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(TELEFONE)))
-            .andExpect(jsonPath("$.[*].ramal").value(hasItem(RAMAL)))
-            .andExpect(jsonPath("$.[*].foto").value(hasItem(FOTO)))
-            .andExpect(jsonPath("$.[*].comentario").value(hasItem(COMENTARIO)))
-            .andExpect(jsonPath("$.[*].supervisor").value(hasItem(SUPERVISOR.intValue())));
+            .andExpect(jsonPath("$.results[*].id").value(hasItem(obj.getId().intValue())))
+            .andExpect(jsonPath("$.results[*].sobrenome").value(hasItem(SOBRENOME)))
+            .andExpect(jsonPath("$.results[*].nomeEmpregado").value(hasItem(NOME_EMPREGADO)))
+            .andExpect(jsonPath("$.results[*].titulo").value(hasItem(TITULO)))
+            .andExpect(jsonPath("$.results[*].tituloDeCortesia").value(hasItem(TITULO_DE_CORTESIA)))
+            .andExpect(jsonPath("$.results[*].dataNascimento").value(hasItem(DATA_NASCIMENTO_STRING)))
+            .andExpect(jsonPath("$.results[*].dataAdmissao").value(hasItem(DATA_ADMISSAO_STRING)))
+            .andExpect(jsonPath("$.results[*].endereco").value(hasItem(ENDERECO)))
+            .andExpect(jsonPath("$.results[*].cidade").value(hasItem(CIDADE)))
+            .andExpect(jsonPath("$.results[*].regiao").value(hasItem(REGIAO)))
+            .andExpect(jsonPath("$.results[*].numeroCEP").value(hasItem(NUMERO_CEP)))
+            .andExpect(jsonPath("$.results[*].siglaPais").value(hasItem(SIGLA_PAIS)))
+            .andExpect(jsonPath("$.results[*].telefone").value(hasItem(TELEFONE)))
+            .andExpect(jsonPath("$.results[*].ramal").value(hasItem(RAMAL)))
+            .andExpect(jsonPath("$.results[*].foto").value(hasItem(FOTO)))
+            .andExpect(jsonPath("$.results[*].comentario").value(hasItem(COMENTARIO)))
+            .andExpect(jsonPath("$.results[*].supervisor").value(hasItem(SUPERVISOR.intValue())));
     }
 
     @Test
@@ -236,6 +250,22 @@ public class EmpregadoControllerTest {
 
         List<Empregado> lista = repository.findAll();
         assertThat(lista).hasSize(qtdeAntesExclusao - 1);
+    }
+
+    @Test
+    @Transactional
+    void excluirNaoExistente() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL_ID, 0))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    void excluirSemId() throws Exception {
+        mockMvc
+            .perform(delete(ENTITY_API_URL))
+            .andExpect(status().isMethodNotAllowed());
     }
 
     @Test

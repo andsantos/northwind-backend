@@ -8,5 +8,5 @@ import br.com.andsantos.northwind.service.dto.ClienteDTO;
 
 public interface ClienteService extends CRUDService<ClienteDTO> {
 
-	Page<ClienteDTO> listar(String companyName, Pageable pageable);
+    Page<ClienteDTO> listar(String companyName, Pageable pageable);
 }
