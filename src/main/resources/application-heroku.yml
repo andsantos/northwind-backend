@@ -22,9 +22,9 @@ spring:
       auto-commit: false
   jpa:
 # descomentar para criar a tabela
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create
+#    generate-ddl: true
+#    hibernate:
+#      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
