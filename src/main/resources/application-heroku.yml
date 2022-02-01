@@ -1,0 +1,40 @@
+error:
+  whitelabel:
+    enabled: false
+
+server:
+  port: 80
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: static/**
+    livereload:
+      enabled: false
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: ${DATABASE_URL}
+#    username: root
+#    password: 123456
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  jpa:
+# descomentar para criar a tabela
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  jackson:
+    default-property-inclusion: non_null
+
+logging:
+  level:
+    ROOT: INFO
+    org.hibernate.SQL: DEBUG
+    br.com.formiga.northwind: DEBUG
